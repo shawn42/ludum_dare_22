@@ -45,4 +45,14 @@ class Clock < Actor
   def percent_of_day
     @time / 1440.0
   end
+
+  def daytime!
+    @time = 8*60
+    fire :transition_to_day
+  end
+
+  def nighttime!
+    @time = 20*60
+    fire :transition_to_night
+  end
 end
