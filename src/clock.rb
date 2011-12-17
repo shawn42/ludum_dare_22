@@ -17,8 +17,8 @@ class Clock < Actor
   has_behavior :layered => {:layer => ZOrder::HudBackground}
   has_behavior :timed
 
-  MORNING = 8*60
-  NIGHTFALL = 20*60
+  MORNING = 7*60
+  NIGHTFALL = 19*60
 
   def setup
     @label = spawn :label, layer: ZOrder::HudText
