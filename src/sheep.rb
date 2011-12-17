@@ -86,21 +86,32 @@ class Sheep < Actor
     other_sheep.mating = true
     mating_sounds
     add_timer 'mating', 2000 do
-      self.mating = false
-      other_sheep.mating = false
+      finish_mating other_sheep
       @box.remove_self
       remove_timer 'mating'
       fire :did_the_hump
     end
   end
 
+  def finish_mating(other_sheep)
+    self.mating = false
+    other_sheep.mating = false
+    cold_distance = 400
+    cold_x = cold_distance * (rand(2) == 0 ? 1 : -1)
+    cold_y = cold_distance * (rand(2) == 0 ? 1 : -1)
+    my_target = Ftor.new cold_x, cold_y
+
+    shyness = 80 
+    move_to self.x + my_target.x, self.y + my_target.y, shyness
+    other_sheep.move_to self.x - my_target.x, self.y - my_target.y, shyness
+  end
+
   def mating_sounds
     wavs = [:oooo, :ooh_la_la]
     pick = wavs[rand(wavs.size)]
     play_sound pick, speed: 1+rand-0.2
-
   end
-  
+
   def mating?
     !@mating.nil? and @mating
   end
