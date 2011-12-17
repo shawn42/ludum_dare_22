@@ -1,5 +1,5 @@
 class WereShepard < Actor
-  has_behavior :graphical, :updatable
+  has_behavior :graphical, :updatable, layered: {layer: ZOrder::Player}
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
   def setup

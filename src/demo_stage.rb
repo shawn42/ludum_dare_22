@@ -1,8 +1,11 @@
 class DemoStage < Stage
   BGCOLOR = [60,60,60]
+  NIGHT_OVERLAY_COLOR = [60,60,60,100]
   def setup
     super
-    @background = spawn :background, :x => viewport.width/2, :y => viewport.height/2
+    mid_screen = viewport.width/2
+    @background = spawn :background, x: mid_screen, y: viewport.height/2
+    @ground = spawn :ground, x: mid_screen, y: viewport.height/2 + 90
 
     @clock = spawn :clock, x: 850, y: 10
     @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.0)
@@ -13,12 +16,10 @@ class DemoStage < Stage
 
     @clock.when :transition_to_day do
       @sheep_herder.enable!
-      @background.transition_to_day
       @sheep_herder.age_sheep
     end
     @clock.when :transition_to_night do
       @sheep_herder.disable!
-      @background.transition_to_night
     end
     input_manager.reg :down, Kb0 do
       @clock.daytime!
@@ -32,8 +33,9 @@ class DemoStage < Stage
   end
 
   def draw(target)
-    target.fill_screen BGCOLOR, 0
+    target.fill_screen BGCOLOR, ZOrder::BackgroundColor
     super
+    target.fill_screen NIGHT_OVERLAY_COLOR, ZOrder::NightOverlay if @clock.nighttime?
   end
 
 end
