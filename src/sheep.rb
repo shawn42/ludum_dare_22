@@ -54,10 +54,12 @@ class Sheep < Actor
   end
 
   def pickup!
+    @picked_up = true
     graphical.image = @picked_up_image
   end
 
   def release!
+    @picked_up = false
     graphical.image = @idle_image
   end
 
@@ -96,7 +98,7 @@ class Sheep < Actor
   def finish_mating(other_sheep)
     self.mating = false
     other_sheep.mating = false
-    cold_distance = 400
+    cold_distance = 100
     cold_x = cold_distance * (rand(2) == 0 ? 1 : -1)
     cold_y = cold_distance * (rand(2) == 0 ? 1 : -1)
     my_target = Ftor.new cold_x, cold_y
@@ -131,6 +133,7 @@ class Sheep < Actor
   end
 
   def move(time)
+    return if @picked_up
     if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
       # No target, acquire one
       @target = [rand(1000), rand(800)]
@@ -149,7 +152,7 @@ class Sheep < Actor
       @y_dir = 2
       self.y = HORIZON
     end
-    
+
     graphical.scale = (self.y / 600.0) + 0.3
   end
 
