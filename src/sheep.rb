@@ -133,15 +133,18 @@ class Sheep < Actor
   def move(time)
     if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
       # No target, acquire one
-      @target = [rand(1000), rand(800)]
-      @speed = rand(400) / 100.0
+      @target = [rand(500), rand(500)]
+      @speed = (rand(400) / 100.0) * SPEED
     end
 
-    x_amount = @speed * (@target[0] > self.x ? 1 : -1) * time / 100.0
-    y_amount = @speed * (@target[1] > self.y ? 1 : -1) * time / 100.0
+    movement_vector = Ftor.new(@target[0], @target[1]).unit * @speed * time / 100.0
 
-    self.x += x_amount
-    self.y += y_amount
+    if movement_vector.magnitude > @speed
+      @speed = movement_vector.magnitude
+    end
+
+    self.x += movement_vector[0]
+    self.y += movement_vector[1]
     if self.y < HORIZON
       @y_dir = 2
       self.y = HORIZON
