@@ -133,7 +133,7 @@ class Sheep < Actor
   def move(time)
     if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
       # No target, acquire one
-      @target = [300, 300]
+      @target = [rand(1000), rand(800)]
       @speed = (rand(400) / 100.0) * SPEED
     end
 
