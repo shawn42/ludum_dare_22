@@ -13,8 +13,6 @@ class Sheep < Actor
   attr_accessor :gender, :age
 
   def setup
-    @x_dir = 0
-    @y_dir = 0
     if @@images.nil?
       # TODO lift images for all types
       @@images = {
@@ -154,16 +152,16 @@ class Sheep < Actor
       @speed = rand(400) / 100.0
     end
 
-    movement_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y).unit * @speed * time / 100.0
-
-    if movement_vector.magnitude.abs > @speed
-      @speed = movement_vector.magnitude - 1
+    full_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y)
+    if full_vector.magnitude.abs < @speed
+      @speed = full_vector.magnitude
     end
+    movement_vector = full_vector.unit * @speed * time / 100.0
+
 
     self.x += movement_vector[0]
     self.y += movement_vector[1]
     if self.y < HORIZON
-      @y_dir = 2
       self.y = HORIZON
     end
 
@@ -183,7 +181,6 @@ class Sheep < Actor
   def die!
     graphical.image = @@images[:genderless][:dead]
     play_sound :sheep_death, volume: 0.25
-    @x_dir, @y_dir = 0, 0
     add_timer 'dying', 1000 do
       self.remove_self
     end
