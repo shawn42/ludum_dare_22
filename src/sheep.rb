@@ -43,6 +43,7 @@ class Sheep < Actor
     @gender = opts[:gender] || :dude
     @age = opts[:age] || 0
     update_image()
+    @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
   end
 
   def bb
@@ -122,12 +123,23 @@ class Sheep < Actor
   end
 
   HORIZON = 240
-  SPEED = 1.0
   def update(time)
     move time unless mating?
   end
 
   def move_to(new_x, new_y, speed)
+    if new_x > @boundary.right
+      new_x = @boundary.right
+    elsif new_x < 0
+      new_x = 0
+    end
+
+    if new_y > @boundary.bottom
+      new_y = @boundary.bottom
+    elsif new_y < HORIZON
+      new_y = HORIZON
+    end
+
     @target = [new_x, new_y]
     @speed = speed
   end
@@ -136,14 +148,16 @@ class Sheep < Actor
     return if @picked_up
     if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
       # No target, acquire one
-      @target = [rand(1000), rand(800)]
-      @speed = (rand(400) / 100.0) * SPEED
+      begin
+        @target = [rand(1000), rand(800)]
+      end while not @boundary.collide_point? @target[0], @target[1]
+      @speed = rand(400) / 100.0
     end
 
     movement_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y).unit * @speed * time / 100.0
 
     if movement_vector.magnitude > @speed
-      @speed = movement_vector.magnitude
+      @speed = movement_vector.magnitude - 1
     end
 
     self.x += movement_vector[0]
