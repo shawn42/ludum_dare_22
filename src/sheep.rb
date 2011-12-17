@@ -54,7 +54,7 @@ class Sheep < Actor
   end
 
   def mate(target_sheep)
-    hump
+    hump target_sheep
   end
 
   def can_mate?(sheep)
@@ -63,19 +63,36 @@ class Sheep < Actor
       sheep.gender && self.gender &&
       sheep.gender != self.gender &&
       sheep.age > 0 &&
-      sheep.age < 3
+      sheep.age < 3 &&
+      self.age > 0 &&
+      self.age < 3 &&
+      !sheep.mating? &&
+      !self.mating?
   end
 
-  def hump
+  def hump(other_sheep)
     # TODO boucy bouncy
     # TODO change to use a ttl and bind to removed event from @box
     @box = spawn :censor_box, box: bb
+    self.mating = true
+    other_sheep.mating = true
+    
     add_timer 'mating', 2000 do
+      self.mating = false
+      other_sheep.mating = false
       @box.remove_self
       remove_timer 'mating'
       fire :did_the_hump
     end
   end
+
+  def mating?
+    !@mating.nil? and @mating
+  end
+  def mating=(mating)
+    @mating = mating
+  end
+
 
   def update(time)
     x_dir = rand(2) == 1 ? 1 : -1
@@ -108,9 +125,13 @@ class Sheep < Actor
       @idle_image = @@images[:genderless][:normal]
       @picked_up_image = @@images[:genderless][:picked_up]
       graphical.scale = 0.7 
-    else
+    elsif @age == 1 or @age == 2
       @idle_image = @@images[gender][:normal]
       @picked_up_image = @@images[gender][:picked_up]
+      graphical.scale = 1.0 
+    else
+      @idle_image = @@images[:genderless][:normal]
+      @picked_up_image = @@images[:genderless][:picked_up]
       graphical.scale = 1.0 
     end
     graphical.image = @idle_image
