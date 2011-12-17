@@ -5,7 +5,7 @@ class SheepHerder < Actor
   def setup
     # TODO build some sheep
     @sheepies = []
-    spawn_sheep(:dude_sheep, x: 100, y: 100)
+    spawn_sheep(:dude_sheep, x: 100, y: 100, view: SheepView)
     spawn_sheep(:chick_sheep, x: 400, y: 200)
     spawn_sheep(:baby_sheep, x: 400, y: 400)
 
@@ -67,6 +67,14 @@ class SheepHerder < Actor
       @click_y_offset = nil
     end
   end
+  def release_sheep!
+    if @sheep_under_mouse
+      @sheep_under_mouse.release!
+      @sheep_under_mouse = nil
+    end
+    @click_x_offset = nil
+    @click_y_offset = nil
+  end
 
   def find_sheep(x,y)
     @sheepies.detect { |sheep| sheep.collide_point?(x, y) }
@@ -85,6 +93,7 @@ class SheepHerder < Actor
   end
 
   def disable!
+    self.release_sheep!
     @enabled = false
   end
 

@@ -12,9 +12,11 @@ class DemoStage < Stage
 
     @clock.when :transition_to_day do
       @sheep_herder.enable!
+      @background.transition_to_day
     end
     @clock.when :transition_to_night do
       @sheep_herder.disable!
+      @background.transition_to_night
     end
     input_manager.reg :down, KbD do
       @clock.daytime!

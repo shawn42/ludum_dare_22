@@ -1,8 +1,8 @@
 class SheepView < GraphicalActorView
   def draw(target, x_off, y_off, z)
+    bb = actor.bb
+    target.draw_box bb.left, bb.top, bb.right, bb.bottom, Color::RED, 9999
     super
-    # bb = actor.bb
-    # target.draw_box bb.left, bb.top, bb.right, bb.bottom, Color::RED, 9999
   end
 end
 
