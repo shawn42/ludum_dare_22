@@ -35,5 +35,14 @@ class Clock < Actor
   def bump
     @time += 30
     @time = @time % 1440
+    if @time == 8*60
+      fire :transition_to_day
+    elsif @time == 20*60
+      fire :transition_to_night
+    end
+  end
+
+  def percent_of_day
+    @time / 1440.0
   end
 end
