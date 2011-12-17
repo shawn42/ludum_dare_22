@@ -15,7 +15,6 @@ class Sheep < Actor
   def setup
     @x_dir = 0
     @y_dir = 0
-    @update_trigger = rand(5) + 1
     if @@images.nil?
       # TODO lift images for all types
       @@images = {
@@ -110,17 +109,25 @@ class Sheep < Actor
   end
 
   HORIZON = 240
+  SPEED = 1.0
   def update(time)
     move time unless mating?
   end
 
+  def move_to(new_x, new_y, speed)
+    @target = [new_x, new_y]
+    @speed = speed
+  end
+
   def move(time)
-    if time.to_i % 9 == @update_trigger
-      @x_dir = rand(2) == 1 ? 1 : -1
-      @y_dir = rand(2) == 1 ? 1 : -1
+    if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
+      # No target, acquire one
+      @target = [rand(1000), rand(800)]
+      @speed = rand(400) / 100.0
     end
-    x_amount = @x_dir * time / 100.0
-    y_amount = @y_dir * time / 100.0
+
+    x_amount = @speed * (@target[0] > self.x ? 1 : -1) * time / 100.0
+    y_amount = @speed * (@target[1] > self.y ? 1 : -1) * time / 100.0
 
     self.x += x_amount
     self.y += y_amount
