@@ -27,6 +27,7 @@ class WereShepard < Actor
 
   def update(time)
     move time if @were
+    graphical.scale = (self.y / 600.0) + 0.3
   end
 
   def become_were_shepard

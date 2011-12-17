@@ -15,7 +15,7 @@ end
 
 class Clock < Actor
   has_behavior :layered => {:layer => ZOrder::HudBackground}
-  has_behavior :timed
+  has_behavior :timed, :updatable
 
   MORNING = 7*60
   NIGHTFALL = 19*60
@@ -28,19 +28,25 @@ class Clock < Actor
     @label.y = self.y+20
     @label.text = text
     @time = 0
+    @night = true
 
     add_timer 'tick', 1000 do
-      bump
-      @label.text = "#{'%02d' % (@time/60)}:#{'%02d' % (@time%60)}"
+      @label.text = "#{'%02d' % (@time/60)}:#{'%02d' % (@time.round%60)}"
     end
   end
   
+  def update(time)
+    @time += (30 * time) / 1000.0
+    @time = 0 if @time > 1440
+    bump
+  end
+  
   def bump
-    @time += 30
-    @time = @time % 1440
-    if @time == MORNING
+    if @night && @time >= MORNING && @time < NIGHTFALL
+      @night = false
       fire :transition_to_day
-    elsif @time == NIGHTFALL
+    elsif !@night && @time > NIGHTFALL
+      @night = true
       fire :transition_to_night
     end
   end

@@ -13,6 +13,9 @@ class Sheep < Actor
   attr_accessor :gender, :age
 
   def setup
+    @x_dir = 0
+    @y_dir = 0
+    @update_trigger = rand(5) + 1
     if @@images.nil?
       # TODO lift images for all types
       @@images = {
@@ -71,12 +74,12 @@ class Sheep < Actor
   end
 
   def hump(other_sheep)
-    # TODO boucy bouncy
+    # TODO bouncy bouncy
     # TODO change to use a ttl and bind to removed event from @box
     @box = spawn :censor_box, box: bb
     self.mating = true
     other_sheep.mating = true
-    
+    mating_sounds
     add_timer 'mating', 2000 do
       self.mating = false
       other_sheep.mating = false
@@ -86,6 +89,13 @@ class Sheep < Actor
     end
   end
 
+  def mating_sounds
+    wavs = [:oooo, :ooh_la_la]
+    pick = wavs[rand(wavs.size)]
+    play_sound pick, speed: 1+rand-0.2
+
+  end
+  
   def mating?
     !@mating.nil? and @mating
   end
@@ -93,15 +103,23 @@ class Sheep < Actor
     @mating = mating
   end
 
-
+  HORIZON = 240
   def update(time)
-    x_dir = rand(2) == 1 ? 1 : -1
-    y_dir = rand(2) == 1 ? 1 : -1
-    x_amount = x_dir * time / 100.0
-    y_amount = y_dir * time / 100.0
+    if time.to_i % 9 == @update_trigger
+      @x_dir = rand(2) == 1 ? 1 : -1
+      @y_dir = rand(2) == 1 ? 1 : -1
+    end
+    x_amount = @x_dir * time / 100.0
+    y_amount = @y_dir * time / 100.0
 
     self.x += x_amount
     self.y += y_amount
+    if self.y < HORIZON
+      @y_dir = 2
+      self.y = HORIZON
+    end
+    
+    graphical.scale = (self.y / 600.0) + 0.3
   end
 
   def age!
@@ -115,6 +133,7 @@ class Sheep < Actor
   def die!
     graphical.image = @@images[:genderless][:dead]
     play_sound :sheep_death, volume: 0.25
+    @x_dir, @y_dir = 0, 0
     add_timer 'dying', 1000 do
       self.remove_self
     end
