@@ -34,5 +34,6 @@ class Clock < Actor
   
   def bump
     @time += 30
+    @time = @time % 1440
   end
 end

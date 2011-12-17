@@ -4,6 +4,7 @@ class DemoStage < Stage
     super
     @sheep = spawn :sheep, x: 100, y: 100
     @clock = spawn :clock, x: 850, y: 10
+    @sun = spawn :sun, clock: @clock
   end
 
   def draw(target)
@@ -12,3 +13,13 @@ class DemoStage < Stage
   end
 end
 
+class Sun < Actor
+  has_behavior :updatable, :graphical
+
+  def setup
+    @clock = opts[:clock]
+  end
+
+  def update(time)
+  end
+end
