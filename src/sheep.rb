@@ -156,7 +156,7 @@ class Sheep < Actor
 
     movement_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y).unit * @speed * time / 100.0
 
-    if movement_vector.magnitude > @speed
+    if movement_vector.magnitude.abs > @speed
       @speed = movement_vector.magnitude - 1
     end
 
@@ -168,6 +168,7 @@ class Sheep < Actor
     end
 
     graphical.scale = (self.y / 600.0) + 0.3
+    graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs
   end
 
   def age!
