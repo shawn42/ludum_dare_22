@@ -1,0 +1,3 @@
+class Sun < HeavenlyBody
+end
+

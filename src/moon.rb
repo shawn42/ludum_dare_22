@@ -1,0 +1,2 @@
+class Moon < HeavenlyBody
+end
