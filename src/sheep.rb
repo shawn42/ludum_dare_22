@@ -111,6 +111,10 @@ class Sheep < Actor
 
   HORIZON = 240
   def update(time)
+    move time unless mating?
+  end
+
+  def move(time)
     if time.to_i % 9 == @update_trigger
       @x_dir = rand(2) == 1 ? 1 : -1
       @y_dir = rand(2) == 1 ? 1 : -1
