@@ -9,10 +9,31 @@ end
 class Sheep < Actor
   has_behavior :updatable, :graphical, :timed, :audible
 
+  @@images = nil
+  attr_accessor :gender, :age
+
   def setup
-    # TODO lift images for all types
-    @picked_up_image = resource_manager.load_image 'sheep_lift.png'
-    @idle_image = graphical.image
+    if @@images.nil?
+      # TODO lift images for all types
+      @@images = {
+        genderless: {
+          normal: resource_manager.load_image('sheep.png'),
+          picked_up: resource_manager.load_image('sheep_lift.png'),
+        },
+        dude: {
+          normal: resource_manager.load_image('dude_sheep.png'),
+          picked_up: resource_manager.load_image('sheep_lift.png'),
+        },
+        chick: {
+          normal: resource_manager.load_image('chick_sheep.png'),
+          picked_up: resource_manager.load_image('sheep_lift.png'),
+        },
+      }
+    end
+
+    @gender = opts[:gender] || :dude
+    @age = opts[:age] || 0
+    update_image()
   end
 
   def bb
@@ -39,7 +60,9 @@ class Sheep < Actor
     sheep && 
       sheep != self && 
       sheep.gender && self.gender &&
-      sheep.gender != self.gender
+      sheep.gender != self.gender &&
+      sheep.age > 0 &&
+      sheep.age < 3
   end
 
   def hump
@@ -53,10 +76,6 @@ class Sheep < Actor
     end
   end
 
-  def gender
-    nil
-  end
-
   def update(time)
     x_dir = rand(2) == 1 ? 1 : -1
     y_dir = rand(2) == 1 ? 1 : -1
@@ -67,6 +86,24 @@ class Sheep < Actor
     self.y += y_amount
   end
 
+  def age!
+    @age += 1
+    update_image
+  end
+
+
+  def update_image
+    if @age == 0
+      @idle_image = @@images[:genderless][:normal]
+      @picked_up_image = @@images[:genderless][:picked_up]
+      graphical.scale = 0.7 
+    else
+      @idle_image = @@images[gender][:normal]
+      @picked_up_image = @@images[gender][:picked_up]
+      graphical.scale = 1.0 
+    end
+    graphical.image = @idle_image
+  end
 end
 
 class BabySheep < Sheep
@@ -94,4 +131,6 @@ class ChickSheep < Sheep
     super
     play_sound :chick_pickup
   end
+end
+class OldSheep < Sheep
 end

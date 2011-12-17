@@ -5,9 +5,6 @@ class SheepHerder < Actor
   def setup
     # TODO build some sheep
     @sheepies = []
-    spawn_sheep(:dude_sheep, x: 100, y: 100, view: SheepView)
-    spawn_sheep(:chick_sheep, x: 400, y: 200)
-    spawn_sheep(:baby_sheep, x: 400, y: 400)
 
     input_manager.reg :mouse_down, MsLeft do |event|
       check_for_sheep_under_mouse event[:data]
@@ -20,14 +17,20 @@ class SheepHerder < Actor
     end
   end
 
+  def spawn_initial_sheep
+    spawn_sheep(gender: :dude, age:1, x: 100, y: 100)
+    spawn_sheep(gender: :chick,age:1, x: 400, y: 200)
+    spawn_sheep(gender: :dude, age:0, x: 400, y: 400)
+  end
+
   def birth_baby(sheep)
     play_sound :baby
     bb = sheep.bb
-    spawn_sheep :baby_sheep, x: bb.left, y: bb.top
+    spawn_sheep age: 0, gender: [:dude, :chick].sample, x: bb.left, y: bb.top
   end
 
   def spawn_sheep(*args)
-    sheep = spawn(*args)
+    sheep = spawn(:sheep, *args)
     sheep.when :did_the_hump do
       birth_baby sheep
     end
@@ -97,4 +100,7 @@ class SheepHerder < Actor
     @enabled = false
   end
 
+  def age_sheep
+    @sheepies.each { |sheep| sheep.age! }
+  end
 end
