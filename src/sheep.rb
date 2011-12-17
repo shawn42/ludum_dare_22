@@ -35,6 +35,12 @@ class Sheep < Actor
       }
     end
 
+    if rand(3) == 0
+      add_timer 'bah', 1000 + rand(3000) do
+        play_sound :bah, speed: 1+rand-0.2
+      end
+    end
+
     @gender = opts[:gender] || :dude
     @age = opts[:age] || 0
     update_image()
