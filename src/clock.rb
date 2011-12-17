@@ -14,14 +14,14 @@ class ClockView < ActorView
 end
 
 class Clock < Actor
-  has_behavior :layered => {:layer => ZOrder::HudText}
+  has_behavior :layered => {:layer => ZOrder::HudBackground}
   has_behavior :timed
 
   MORNING = 8*60
   NIGHTFALL = 20*60
-  
+
   def setup
-    @label = spawn :label, layer: 0
+    @label = spawn :label, layer: ZOrder::HudText
     text = "00:00"
     width = @label.font.text_width text
     @label.x = self.x+(width/2)
