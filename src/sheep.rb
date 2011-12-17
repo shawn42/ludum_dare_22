@@ -19,6 +19,7 @@ class Sheep < Actor
         genderless: {
           normal: resource_manager.load_image('sheep.png'),
           picked_up: resource_manager.load_image('sheep_lift.png'),
+          dead: resource_manager.load_image('sheep_splat.png')
         },
         dude: {
           normal: resource_manager.load_image('dude_sheep.png'),
@@ -89,6 +90,16 @@ class Sheep < Actor
   def age!
     @age += 1
     update_image
+    if (@age > 3)
+      self.die!
+    end
+  end
+
+  def die!
+    graphical.image = @@images[:genderless][:dead]
+    add_timer 'dying', 1000 do
+      self.remove_self
+    end
   end
 
 
@@ -106,31 +117,3 @@ class Sheep < Actor
   end
 end
 
-class BabySheep < Sheep
-  def setup
-    super
-    graphical.scale = 0.7
-  end
-end
-
-class DudeSheep < Sheep
-  def gender
-    :dude
-  end
-  def pickup!
-    super
-    play_sound :dude_pickup
-  end
-end
-class ChickSheep < Sheep
-  def gender
-    :chick
-  end
-
-  def pickup!
-    super
-    play_sound :chick_pickup
-  end
-end
-class OldSheep < Sheep
-end
