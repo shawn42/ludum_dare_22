@@ -41,3 +41,4 @@ DEPENDENCIES
   gamebox
   require_all
   rspec
+  tween
