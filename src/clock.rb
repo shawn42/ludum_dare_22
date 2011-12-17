@@ -14,7 +14,7 @@ class ClockView < ActorView
 end
 
 class Clock < Actor
-  has_behavior :layered => {:layer => 998}
+  has_behavior :layered => {:layer => ZOrder::HudText}
   has_behavior :timed
 
   MORNING = 8*60

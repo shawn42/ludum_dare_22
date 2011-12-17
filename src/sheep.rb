@@ -7,7 +7,7 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  has_behavior :updatable, :graphical, :timed, :audible
+  has_behavior :updatable, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
 
   def setup
     # TODO lift images for all types

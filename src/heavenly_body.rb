@@ -1,10 +1,10 @@
 class HeavenlyBody < Actor
-  has_behavior :updatable, :graphical
+  has_behavior :updatable, :graphical, layered: {layer: ZOrder::HeavenlyBody}
 
   def setup
     @clock = opts[:clock]
-    @center = [600, 100]
-    @radius = 50
+    @center = [600, 180]
+    @radius = 70
     @offset = opts[:offset]
     # @center = [wrapped_screen.width/2, wrapped_screen.height]
     # @radius = wrapped_screen.height
