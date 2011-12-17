@@ -17,6 +17,7 @@ class DemoStage < Stage
     @clock.when :transition_to_day do
       @sheep_herder.enable!
       @sheep_herder.age_sheep
+      sound_manager.play_sound :rooster
     end
     @clock.when :transition_to_night do
       @sheep_herder.disable!

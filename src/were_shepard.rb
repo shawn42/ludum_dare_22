@@ -1,17 +1,17 @@
 class WereShepard < Actor
-  has_behavior :graphical, :updatable, layered: {layer: ZOrder::Player}
+  has_behavior :graphical, :animated, :updatable, layered: {layer: ZOrder::Player}
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
   def setup
     @clock = opts[:clock]
-    @were = @clock.nighttime?
+    @clock.nighttime? ? become_were_shepard : become_shepard
 
     @clock.when :transition_to_day do
-      @were = false
+      become_shepard
     end
 
     @clock.when :transition_to_night do
-      @were = true
+      become_were_shepard
     end
 
     i = input_manager
@@ -23,6 +23,16 @@ class WereShepard < Actor
 
   def update(time)
     move time if @were
+  end
+
+  def become_were_shepard
+    @were = true
+    self.action = :were_shepard
+  end
+
+  def become_shepard
+    @were = false
+    self.action = :shepard
   end
 
   def move(time)
