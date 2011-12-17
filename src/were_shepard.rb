@@ -77,7 +77,7 @@ class WereShepard < Actor
 
     @dir = -1 if move_right
     @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.x_scale.abs
+    graphical.x_scale = @dir * graphical.scale.abs
   end
 
 end
