@@ -14,6 +14,7 @@ class DemoStage < Stage
     @clock.when :transition_to_day do
       @sheep_herder.enable!
       @background.transition_to_day
+      @sheep_herder.age_sheep
     end
     @clock.when :transition_to_night do
       @sheep_herder.disable!
@@ -26,6 +27,8 @@ class DemoStage < Stage
       @clock.nighttime!
     end
 
+    @clock.daytime!
+    @sheep_herder.spawn_initial_sheep
   end
 
   def draw(target)
