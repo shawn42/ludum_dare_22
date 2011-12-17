@@ -15,7 +15,6 @@ class Sheep < Actor
   def setup
     @x_dir = 0
     @y_dir = 0
-    @update_trigger = rand(5) + 1
     if @@images.nil?
       # TODO lift images for all types
       @@images = {
@@ -33,6 +32,12 @@ class Sheep < Actor
           picked_up: resource_manager.load_image('sheep_lift.png'),
         },
       }
+    end
+
+    if rand(3) == 0
+      add_timer 'bah', 1000 + rand(3000) do
+        play_sound :bah, speed: 1+rand-0.2
+      end
     end
 
     @gender = opts[:gender] || :dude
@@ -81,21 +86,32 @@ class Sheep < Actor
     other_sheep.mating = true
     mating_sounds
     add_timer 'mating', 2000 do
-      self.mating = false
-      other_sheep.mating = false
+      finish_mating other_sheep
       @box.remove_self
       remove_timer 'mating'
       fire :did_the_hump
     end
   end
 
+  def finish_mating(other_sheep)
+    self.mating = false
+    other_sheep.mating = false
+    cold_distance = 400
+    cold_x = cold_distance * (rand(2) == 0 ? 1 : -1)
+    cold_y = cold_distance * (rand(2) == 0 ? 1 : -1)
+    my_target = Ftor.new cold_x, cold_y
+
+    shyness = 80 
+    move_to self.x + my_target.x, self.y + my_target.y, shyness
+    other_sheep.move_to self.x - my_target.x, self.y - my_target.y, shyness
+  end
+
   def mating_sounds
     wavs = [:oooo, :ooh_la_la]
     pick = wavs[rand(wavs.size)]
     play_sound pick, speed: 1+rand-0.2
-
   end
-  
+
   def mating?
     !@mating.nil? and @mating
   end
@@ -104,13 +120,25 @@ class Sheep < Actor
   end
 
   HORIZON = 240
+  SPEED = 1.0
   def update(time)
-    if time.to_i % 9 == @update_trigger
-      @x_dir = rand(2) == 1 ? 1 : -1
-      @y_dir = rand(2) == 1 ? 1 : -1
+    move time unless mating?
+  end
+
+  def move_to(new_x, new_y, speed)
+    @target = [new_x, new_y]
+    @speed = speed
+  end
+
+  def move(time)
+    if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
+      # No target, acquire one
+      @target = [rand(1000), rand(800)]
+      @speed = rand(400) / 100.0
     end
-    x_amount = @x_dir * time / 100.0
-    y_amount = @y_dir * time / 100.0
+
+    x_amount = @speed * (@target[0] > self.x ? 1 : -1) * time / 100.0
+    y_amount = @speed * (@target[1] > self.y ? 1 : -1) * time / 100.0
 
     self.x += x_amount
     self.y += y_amount

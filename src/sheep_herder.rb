@@ -80,7 +80,7 @@ class SheepHerder < Actor
   end
 
   def find_sheep(x,y)
-    @sheepies.detect { |sheep| sheep.collide_point?(x, y) }
+    @sheepies.detect { |sheep| !sheep.mating? && sheep.collide_point?(x, y) }
   end
 
   def find_mate_for(sheep, x, y)
