@@ -167,7 +167,8 @@ class Sheep < Actor
       self.y = HORIZON
     end
 
-    graphical.scale = (self.y / 600.0) + 0.3
+    graphical.x_scale = (self.y / 600.0) + 0.3
+    graphical.y_scale = (self.y / 600.0) + 0.3
     graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs
   end
 
