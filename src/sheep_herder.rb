@@ -21,7 +21,7 @@ class SheepHerder < Actor
     return unless can_handle_sheep?
     click_x = event_data[0]
     click_y = event_data[1]
-    target_sheep = @sheepies.detect { |sheep| sheep.collide_point? click_x, click_y }
+    target_sheep = find_sheep click_x, click_y
     if target_sheep
       @click_x_offset = target_sheep.x - click_x
       @click_y_offset = target_sheep.y - click_y
@@ -41,11 +41,22 @@ class SheepHerder < Actor
   def release_sheep(event_data)
     return unless can_handle_sheep?
     if @sheep_under_mouse
+
+      target_sheep = find_mate_for @sheep_under_mouse, *event_data
       @sheep_under_mouse.release!
+      @sheep_under_mouse.mate(target_sheep) if target_sheep
       @sheep_under_mouse = nil
       @click_x_offset = nil
       @click_y_offset = nil
     end
+  end
+
+  def find_sheep(x,y)
+    @sheepies.detect { |sheep| sheep.collide_point?(x, y) }
+  end
+
+  def find_mate_for(sheep, x, y)
+    @sheepies.detect { |s| s.collide_point?(x, y) && sheep.can_mate?(s) }
   end
 
   def can_handle_sheep?
