@@ -80,9 +80,18 @@ class DudeSheep < Sheep
   def gender
     :dude
   end
+  def pickup!
+    super
+    play_sound :dude_pickup
+  end
 end
 class ChickSheep < Sheep
   def gender
     :chick
+  end
+
+  def pickup!
+    super
+    play_sound :chick_pickup
   end
 end

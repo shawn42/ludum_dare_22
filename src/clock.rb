@@ -16,6 +16,9 @@ end
 class Clock < Actor
   has_behavior :layered => {:layer => 998}
   has_behavior :timed
+
+  MORNING = 8*60
+  NIGHTFALL = 20*60
   
   def setup
     @label = spawn :label, layer: 0
@@ -35,9 +38,9 @@ class Clock < Actor
   def bump
     @time += 30
     @time = @time % 1440
-    if @time == 8*60
+    if @time == MORNING
       fire :transition_to_day
-    elsif @time == 20*60
+    elsif @time == NIGHTFALL
       fire :transition_to_night
     end
   end
@@ -47,12 +50,20 @@ class Clock < Actor
   end
 
   def daytime!
-    @time = 8*60
+    @time = MORNING
     fire :transition_to_day
   end
 
   def nighttime!
-    @time = 20*60
+    @time = NIGHTFALL
     fire :transition_to_night
+  end
+
+  def daytime?
+    @time >= MORNING && @time < NIGHTFALL
+  end
+
+  def nighttime?
+    !daytime?
   end
 end

@@ -3,6 +3,7 @@ GEM
   specs:
     chipmunk (5.3.4.5)
     chipmunk (5.3.4.5-x86-mingw32)
+    coderay (0.9.8)
     constructor (2.0.0)
     diff-lcs (1.1.3)
     diy (1.1.2)
@@ -19,6 +20,16 @@ GEM
     gosu (0.7.41-x86-mingw32)
     kvo (0.0.1)
       publisher
+    method_source (0.6.7)
+      ruby_parser (>= 2.3.1)
+    pry (0.9.7.4)
+      coderay (~> 0.9.8)
+      method_source (~> 0.6.7)
+      ruby_parser (>= 2.3.1)
+      slop (~> 2.1.0)
+    pry-remote (0.1.0)
+      pry (~> 0.9.6)
+      slop (~> 2.1)
     publisher (1.1.2)
     require_all (1.2.0)
     rspec (2.7.0)
@@ -29,6 +40,10 @@ GEM
     rspec-expectations (2.7.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.7.0)
+    ruby_parser (2.3.1)
+      sexp_processor (~> 3.0)
+    sexp_processor (3.0.8)
+    slop (2.1.0)
     tween (0.1.2)
 
 PLATFORMS
@@ -39,6 +54,8 @@ DEPENDENCIES
   chipmunk
   diy
   gamebox
+  pry
+  pry-remote
   require_all
   rspec
   tween
