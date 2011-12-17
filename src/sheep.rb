@@ -7,9 +7,10 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  has_behavior :graphical, :timed
+  has_behavior :updatable, :graphical, :timed, :audible
 
   def setup
+    # TODO lift images for all types
     @picked_up_image = resource_manager.load_image 'sheep_lift.png'
     @idle_image = graphical.image
   end
@@ -31,24 +32,57 @@ class Sheep < Actor
   end
 
   def mate(target_sheep)
-    @box = spawn :censor_box, box: bb
-    add_timer 'mating', 2000 do
-      @box.remove_self
-    end
-
     hump
-
-    puts "#{self.object_id} mated with #{target_sheep.object_id}"
   end
 
   def can_mate?(sheep)
-    if sheep && (sheep != self)
-      true # for now; love for all
-    end
+    sheep && 
+      sheep != self && 
+      sheep.gender && self.gender &&
+      sheep.gender != self.gender
   end
 
   def hump
     # TODO boucy bouncy
+    # TODO change to use a ttl and bind to removed event from @box
+    @box = spawn :censor_box, box: bb
+    add_timer 'mating', 2000 do
+      @box.remove_self
+      remove_timer 'mating'
+      fire :did_the_hump
+    end
   end
 
+  def gender
+    nil
+  end
+
+  def update(time)
+    x_dir = rand(2) == 1 ? 1 : -1
+    y_dir = rand(2) == 1 ? 1 : -1
+    x_amount = x_dir * time / 100.0
+    y_amount = y_dir * time / 100.0
+
+    self.x += x_amount
+    self.y += y_amount
+  end
+
+end
+
+class BabySheep < Sheep
+  def setup
+    super
+    graphical.scale = 0.7
+  end
+end
+
+class DudeSheep < Sheep
+  def gender
+    :dude
+  end
+end
+class ChickSheep < Sheep
+  def gender
+    :chick
+  end
 end
