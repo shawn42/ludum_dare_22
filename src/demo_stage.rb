@@ -5,7 +5,7 @@ class DemoStage < Stage
     super
     mid_screen = viewport.width/2
     @background = spawn :background, x: mid_screen, y: viewport.height/2
-    @ground = spawn :ground, x: mid_screen, y: viewport.height/2 + 90
+    @ground = spawn :ground, x: mid_screen, y: viewport.height/2
 
     @clock = spawn :clock, x: 950, y: 10
     @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.0)
