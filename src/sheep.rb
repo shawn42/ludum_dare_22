@@ -7,7 +7,7 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  has_behavior :updatable, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
+  has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
 
   @@images = nil
   attr_accessor :gender, :age
@@ -114,9 +114,15 @@ class Sheep < Actor
 
   def die!
     graphical.image = @@images[:genderless][:dead]
+    play_sound :sheep_death, volume: 0.25
     add_timer 'dying', 1000 do
       self.remove_self
     end
+    @dead = true
+  end
+
+  def dead?
+    !@dead.nil? and @dead
   end
 
 

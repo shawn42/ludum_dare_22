@@ -29,7 +29,7 @@ class Clock < Actor
     @label.text = text
     @time = 0
 
-    add_timer 'tick', 1000 do
+    add_timer 'tick', 100 do
       bump
       @label.text = "#{'%02d' % (@time/60)}:#{'%02d' % (@time%60)}"
     end
