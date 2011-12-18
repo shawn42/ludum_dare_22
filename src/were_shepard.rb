@@ -16,6 +16,7 @@ class WereShepard < Actor
       become_shepard
     end
     @clock.when :transition_to_night do
+      puts 4
       become_were_shepard
     end
 
@@ -64,8 +65,8 @@ class WereShepard < Actor
     fire :ate_food, amount
   end
 
-  def become_shepard
-    die! if @consumed_food < @hunger
+  def become_shepard(started = true)
+    die! if @consumed_food < @hunger && @clock.started?
     @consumed_food = 0
     @hunger *= HUNGER_SCALE
     @were = false
@@ -74,7 +75,7 @@ class WereShepard < Actor
 
   def die!
     # TODO this is broken
-    # remove_self
+    self.remove_self
   end
 
   def move(time)

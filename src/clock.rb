@@ -50,6 +50,10 @@ class Clock < Actor
     bump
   end
   
+  def started?
+    @time > 0 && @day > 0
+  end
+  
   def bump
     if @night && @time >= MORNING && @time < NIGHTFALL
       @night = false
