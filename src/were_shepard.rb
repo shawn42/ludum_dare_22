@@ -31,13 +31,11 @@ class WereShepard < Actor
 
 
   ATTACK_SOUNDS = [:swipe1, :swipe2, :swipe3, :swipe4]
-  CRUNCH_SOUNDS = [:crunch1, :crunch2]
   def attack
     if @were
-      eat(5)
-      puts "ATTACK"
+      fire :attack, -@dir
+      # eat(5)
       play_sound ATTACK_SOUNDS.sample
-      play_sound CRUNCH_SOUNDS.sample
     end
   end
 
@@ -50,7 +48,7 @@ class WereShepard < Actor
 
     @dir = -1 if move_right
     @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.scale.abs
+    graphical.x_scale = @dir * graphical.x_scale.abs
   end
 
   def become_were_shepard

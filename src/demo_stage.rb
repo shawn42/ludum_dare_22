@@ -14,7 +14,12 @@ class DemoStage < Stage
     @sheep_herder = spawn :sheep_herder
     @were_shepard = spawn :were_shepard, x: 500, y: 500, clock: @clock
     @were_shepard.when :remove_me do
+      # dead... you lose
+    end
 
+    @were_shepard.when :attack do |dir|
+      sheep = @sheep_herder.find_sheep(@were_shepard.x + 30*dir, @were_shepard.y)
+      @were_shepard.eat sheep.injure! if sheep
     end
 
     @clock.when :transition_to_day do

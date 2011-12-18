@@ -14,6 +14,15 @@ class Sheep < Actor
   attr_accessor :gender, :age
 
   def setup
+    @health = case gender
+    when :dude
+      4
+    when :chick
+      2
+    else #baby
+      1
+    end
+
     if @@images.nil?
       # TODO lift images for all types
       @@images = {
@@ -46,7 +55,9 @@ class Sheep < Actor
   end
 
   def bb
-    Rect.new(self.x - 40, self.y - 30, width, height)
+    xs = self.x_scale.abs
+    ys = self.y_scale.abs
+    Rect.new(self.x - 40*xs, self.y - 30*ys, width*xs, height*ys)
   end
 
   def collide_point?(x,y)
@@ -122,7 +133,7 @@ class Sheep < Actor
   end
 
   def update(time)
-    move time unless mating?
+    move time unless mating? || dead?
   end
 
   def move_to(new_x, new_y, speed)
@@ -143,6 +154,7 @@ class Sheep < Actor
   end
 
   def move(time)
+    movement_vector = nil
     unless @picked_up
       if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
         # No target, acquire one
@@ -164,12 +176,13 @@ class Sheep < Actor
       if self.y < HORIZON
         self.y = HORIZON
       end
-      graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs
     end
 
     size = (self.y / 600.0) + 0.3
     graphical.x_scale = size
     graphical.y_scale = size
+
+    graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs if movement_vector
 
   end
 
@@ -194,6 +207,22 @@ class Sheep < Actor
     !@dead.nil? and @dead
   end
 
+  CRUNCH_SOUNDS = [:crunch1, :crunch2]
+  def injure!
+    @health -= 1
+    # spawn :gibs, size: 5-@health
+    play_sound CRUNCH_SOUNDS.sample
+    die! if @health == 0
+
+    case gender
+    when :dude
+      5
+    when :chick
+      4
+    else #baby
+      2
+    end
+  end
 
   def update_image
     if @age == 0
