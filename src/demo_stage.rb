@@ -15,6 +15,9 @@ class DemoStage < Stage
     @were_shepard = spawn :were_shepard, x: 500, y: 500, clock: @clock
     @were_shepard.when :remove_me do
       # dead... you lose
+      # change_stage_to :you_lose
+      puts "you died"
+      exit
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
