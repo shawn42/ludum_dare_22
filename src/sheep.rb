@@ -7,7 +7,6 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  HORIZON = 240
   has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
 
   @@images = nil
