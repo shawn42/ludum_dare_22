@@ -5,6 +5,7 @@ module ZOrder
   Ground,
   Sheep,
   Player,
+  Gibs,
   NightOverlay,
   HudBackground,
   HudText,
