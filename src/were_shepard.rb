@@ -60,7 +60,6 @@ class WereShepard < Actor
   end
 
   def eat(amount)
-    puts "consumed #{amount}"
     @consumed_food += amount
     fire :ate_food, amount
   end
@@ -75,7 +74,6 @@ class WereShepard < Actor
 
   def die!
     # TODO this is broken
-    puts "DIE"
     # remove_self
   end
 
