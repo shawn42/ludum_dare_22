@@ -58,6 +58,8 @@ class Sheep < Actor
 
     update_image()
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
+
+    @my_shadow = spawn :sheep_shadow
   end
 
   def bb
@@ -70,14 +72,19 @@ class Sheep < Actor
     bb.collide_point?(x,y)
   end
 
+  PICK_UP_ALTITUDE = 30
   def pickup!
     @picked_up = true
     graphical.image = @picked_up_image
+    @my_shadow.altitude = PICK_UP_ALTITUDE
+    self.y -= PICK_UP_ALTITUDE
   end
 
   def release!
     @picked_up = false
     graphical.image = @idle_image
+    @my_shadow.altitude = 0
+    self.y += PICK_UP_ALTITUDE
   end
 
   def mate(target_sheep)
@@ -201,6 +208,8 @@ class Sheep < Actor
 
     graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs if movement_vector
 
+    @my_shadow.set_scale graphical.x_scale, graphical.y_scale
+    @my_shadow.move_to self.x, self.y
   end
 
   def age!
@@ -219,6 +228,7 @@ class Sheep < Actor
   end
 
   def die!
+    @my_shadow.remove_self
     graphical.image = @@images[:dude][:dead]
     play_sound :sheep_death, volume: 0.25
     add_timer 'dying', 1000 do

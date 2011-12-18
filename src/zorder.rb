@@ -3,6 +3,7 @@ module ZOrder
   Sky,
   HeavenlyBody,
   Ground,
+  Shadow,
   Sheep,
   Player,
   Gibs,

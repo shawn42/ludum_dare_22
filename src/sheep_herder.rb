@@ -45,7 +45,7 @@ class SheepHerder < Actor
     target_sheep = find_sheep click_x, click_y
     if target_sheep
       @click_x_offset = target_sheep.x - click_x
-      @click_y_offset = target_sheep.y - click_y
+      @click_y_offset = (target_sheep.y - click_y) - Sheep::PICK_UP_ALTITUDE
       @sheep_under_mouse = target_sheep
       @sheep_under_mouse.pickup!
     end
