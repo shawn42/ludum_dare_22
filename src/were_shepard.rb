@@ -7,6 +7,7 @@ class WereShepard < Actor
   def setup
     @clock = opts[:clock]
     @hunger = 10
+    @consumed_food = 0
     @dir = 1
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
 
@@ -40,23 +41,22 @@ class WereShepard < Actor
   end
 
   def update(time)
-    move time if @were
+    if @were
+      move time 
 
-    size = (self.y / 600.0) + 0.3
-    graphical.x_scale = size
-    graphical.y_scale = size
+      size = (self.y / 600.0) + 0.3
+      graphical.x_scale = size
+      graphical.y_scale = size
 
-    @dir = -1 if move_right
-    @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.x_scale.abs
+      @dir = -1 if move_right
+      @dir = 1 if move_left
+      graphical.x_scale = @dir * graphical.x_scale.abs
+    end
   end
 
   def become_were_shepard
     @were = true
     self.action = :were_shepard
-    @hunger *= HUNGER_SCALE
-    puts "need #{@hunger}"
-    @consumed_food = 0
     fire :require_food, @hunger
   end
 
@@ -68,11 +68,14 @@ class WereShepard < Actor
 
   def become_shepard
     die! if @consumed_food < @hunger
+    @consumed_food = 0
+    @hunger *= HUNGER_SCALE
     @were = false
     self.action = :shepard
   end
 
   def die!
+    # TODO this is broken
     puts "DIE"
     # remove_self
   end
