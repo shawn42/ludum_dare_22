@@ -18,7 +18,7 @@ class Popup < Actor
     end
     color = [200,230,255,200]
     
-    @labe = spawn :label, text: opts[:msg], x: 0, y: 0, font: FONT, size: 25, color: color
+    @label = spawn :label, text: opts[:msg], x: 0, y: 0, font: FONT, size: 25, color: color, layer: ZOrder::HudText
   end
   
   def draw(target)
