@@ -234,7 +234,7 @@ class Sheep < Actor
   CRUNCH_SOUNDS = [:crunch1, :crunch2]
   def injure!
     @health -= 1
-    spawn :gibs, size: 5-@health, x: self.x, y: self.y
+    spawn :gibs, size: (5-@health)*2, x: self.x, y: self.y
     play_sound CRUNCH_SOUNDS.sample
     die! if @health == 0
 

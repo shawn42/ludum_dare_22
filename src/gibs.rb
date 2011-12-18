@@ -18,15 +18,12 @@ class Gibs < Actor
   
   def setup
     @size = opts[:size]
-    @gibs = [
-    {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5},
-      {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5},
-      {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5},
-      {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5},
-    ]
-    add_timer 'ttl', 1000 do
-      remove_self
+    @gibs = []
+    @size.times do
+      @gibs << {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5, ttl: rand(1000)}
     end
+    # add_timer 'ttl', 1000 do
+    # end
   end
 
   def update(time)
@@ -34,6 +31,9 @@ class Gibs < Actor
       gib[:x] += gib[:dx]
       gib[:y] += gib[:dy]
       gib[:dy] = gib[:dy] + 0.1
+      gib[:ttl] -= time
     end
+
+    remove_self unless @gibs.any?{|g|g[:ttl] > 0}
   end
 end
