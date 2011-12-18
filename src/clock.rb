@@ -24,21 +24,34 @@ class Clock < Actor
     @label = spawn :label, layer: ZOrder::HudText
     text = "00:00"
     width = @label.font.text_width text
-    @label.x = self.x+(width/2)
+    @label.x = self.x+20
     @label.y = self.y+20
     @label.text = text
     @time = 0
+    @day = 0
     @night = true
+
+    @day_label = spawn :label, layer: ZOrder::HudText
+    @day_label.text = "Day #{@day}"
+    @day_label.x = self.x+90
+    @day_label.y = self.y+20
 
     add_timer 'tick', 1000 do
       truncated_time = @time / 1000.0
       @label.text = "#{'%02d' % (truncated_time/60)}:#{'%02d' % (truncated_time.round%60)}"
+      if truncated_time < 30
+        @day_label.text = "Day #{@day}"
+      end
     end
   end
   
   def update(time)
     @time += (30 * time)
-    @time = 0 if @time >= 1440000
+    if @time >= 1440000
+      @day += 1
+      @time = 0
+    end
+
     bump
   end
   
