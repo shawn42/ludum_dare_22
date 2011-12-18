@@ -31,10 +31,10 @@ class Clock < Actor
     @day = 0
     @night = true
 
-    @day_label = spawn :label, layer: ZOrder::HudText
+    @day_label = spawn :label, layer: ZOrder::HudText, size: 25
     @day_label.text = "Day #{@day}"
     @day_label.x = self.x+90
-    @day_label.y = self.y+20
+    @day_label.y = self.y+24
 
     add_timer 'tick', 1000 do
       truncated_time = @time / 1000.0
@@ -51,7 +51,6 @@ class Clock < Actor
       @day += 1
       @time = 0
     end
-
     bump
   end
   
