@@ -1,4 +1,6 @@
-class DemoStage < Stage
+HORIZON = 240
+
+class MainStage < Stage
   BGCOLOR = [60,60,60]
   NIGHT_OVERLAY_COLOR = [60,60,60,100]
   def setup

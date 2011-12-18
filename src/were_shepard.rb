@@ -3,7 +3,6 @@ class WereShepard < Actor
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
   HUNGER_SCALE = 1.3
-  HORIZON = 240
   def setup
     @clock = opts[:clock]
     @hunger = 10
