@@ -17,8 +17,8 @@ class Clock < Actor
   has_behavior :layered => {:layer => ZOrder::HudBackground}
   has_behavior :timed, :updatable
 
-  MORNING = 7*60
-  NIGHTFALL = 19*60
+  MORNING = 7*60*1000
+  NIGHTFALL = 19*60*1000
 
   def setup
     @label = spawn :label, layer: ZOrder::HudText
@@ -31,13 +31,14 @@ class Clock < Actor
     @night = true
 
     add_timer 'tick', 1000 do
-      @label.text = "#{'%02d' % (@time/60)}:#{'%02d' % (@time.round%60)}"
+      truncated_time = @time / 1000.0
+      @label.text = "#{'%02d' % (truncated_time/60)}:#{'%02d' % (truncated_time.round%60)}"
     end
   end
   
   def update(time)
-    @time += (30 * time) / 1000.0
-    @time = 0 if @time > 1440
+    @time += (30 * time)
+    @time = 0 if @time >= 1440000
     bump
   end
   
@@ -52,7 +53,7 @@ class Clock < Actor
   end
 
   def percent_of_day
-    @time / 1440.0
+    @time / 1440000.0
   end
 
   def daytime!
