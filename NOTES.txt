@@ -1,0 +1,7 @@
+RELEASE OS X:
+bundle install --without development
+be rake release:osx
+# need an icon?
+
+WINDOWS:
+investigate win32.rake

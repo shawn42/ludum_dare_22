@@ -1,9 +1,18 @@
 source "http://rubygems.org"
-gem 'chipmunk'
-gem 'require_all'
-gem "gamebox"
-gem "diy"
-gem "rspec"
-gem "tween"
-gem "pry"
-gem "pry-remote"
+
+gem "rake"
+gem "RedCloth"
+
+group :package do
+  gem 'require_all'
+  gem "gamebox", '0.3.4'
+  gem "diy"
+  gem "tween"
+end
+
+group :development do
+  gem "rspec"
+  gem "pry"
+  gem "pry-remote"
+  gem "ruby-debug19"
+end
