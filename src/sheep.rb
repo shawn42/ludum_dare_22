@@ -17,19 +17,23 @@ class Sheep < Actor
     @clock = opts[:clock]
     if @@images.nil?
       @@images = {
-        genderless: {
-          normal: resource_manager.load_image('sheep.png'),
-          picked_up: resource_manager.load_image('sheep_lift.png'),
-          dead: resource_manager.load_image('sheep_splat.png')
+        baby: {
+          normal: resource_manager.load_image('baby_sheep.png'),
+          picked_up: resource_manager.load_image('baby_sheep_lift.png'),
         },
         dude: {
           normal: resource_manager.load_image('dude_sheep.png'),
           picked_up: resource_manager.load_image('dude_sheep_lift.png'),
+          dead: resource_manager.load_image('sheep_splat.png')
         },
         chick: {
           normal: resource_manager.load_image('chick_sheep.png'),
           picked_up: resource_manager.load_image('chick_sheep_lift.png'),
         },
+        old: {
+          normal: resource_manager.load_image('old_sheep.png'),
+          picked_up: resource_manager.load_image('old_sheep_lift.png'),
+        }
       }
     end
 
@@ -209,7 +213,7 @@ class Sheep < Actor
   end
 
   def die!
-    graphical.image = @@images[:genderless][:dead]
+    graphical.image = @@images[:dude][:dead]
     play_sound :sheep_death, volume: 0.25
     add_timer 'dying', 1000 do
       self.remove_self
@@ -240,17 +244,17 @@ class Sheep < Actor
 
   def update_image
     if @age == 0
-      @idle_image = @@images[:genderless][:normal]
-      @picked_up_image = @@images[:genderless][:picked_up]
-      graphical.scale = 0.7 
+      @idle_image = @@images[:baby][:normal]
+      @picked_up_image = @@images[:baby][:picked_up]
+      graphical.scale = 0.6 
     elsif @age == 1 or @age == 2
       @idle_image = @@images[gender][:normal]
       @picked_up_image = @@images[gender][:picked_up]
       graphical.scale = 1.0 
-    else
-      @idle_image = @@images[:genderless][:normal]
-      @picked_up_image = @@images[:genderless][:picked_up]
-      graphical.scale = 1.0 
+    else # too old to breed
+      @idle_image = @@images[:old][:normal]
+      @picked_up_image = @@images[:old][:picked_up]
+      graphical.scale = 0.9
     end
     graphical.image = @idle_image
   end
