@@ -14,10 +14,10 @@ class HungerMeter < Actor
   has_behavior :updatable
 
   def setup
-    @label = spawn :label, layer: ZOrder::HudText, font: 'SueEllenFrancisco.ttf', size: 64
+    @label = spawn :label, layer: ZOrder::HudText, font: FONT, size: 30
     width = @label.font.text_width "Hunger:    "
-    @label.x = self.x+20
-    @label.y = self.y
+    @label.x = self.x+15
+    @label.y = self.y+20
     write_label
   end
 

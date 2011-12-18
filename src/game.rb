@@ -1,3 +1,4 @@
+FONT = 'Ribeye-Regular.ttf'
 class Game
 
   constructor :wrapped_screen, :input_manager, :sound_manager,

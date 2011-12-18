@@ -11,7 +11,7 @@ class CensorBox < Actor
   def setup
     @bb = opts[:box]
     @bb.inflate! -10, -30
-    #spawn :label, text: "CENSORED", font: "SueEllenFrancisco.ttf", size: 40, x: 2, y: 2
+    #spawn :label, text: "CENSORED", font: FONT, size: 40, x: 2, y: 2
     @rotator = spawn :censor_box_rotator
     #@rotator.rotation
     instance_eval do

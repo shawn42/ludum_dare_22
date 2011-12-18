@@ -9,9 +9,10 @@ class IntroStage < Stage
     @input_manager.reg :keyboard_down, KbSpace do
       fire :next_stage
     end
-    spawn :label, text: "You are the last of the Wereshepards.", x: 20, y: 10, font: 'SueEllenFrancisco.ttf', size: 110, color: [255,255,255,255]
-    spawn :label, text: "You must breed enough sheep to feed your evil soul at night.", x: 20, y: 110, font: 'SueEllenFrancisco.ttf', size: 110
-    spawn :label, text: "Press Space to begin tending your flock...", x: 20, y: 210, font: 'SueEllenFrancisco.ttf', size: 110
+    color = [200,230,255,200]
+    spawn :label, text: "You are the last of the Wereshepards.", x: 20, y: 100, font: FONT, size: 45, color: color
+    spawn :label, text: "You must breed enough sheep to feed your evil soul at night.", x: 20, y: 210, font: FONT, size: 45, color: color
+    spawn :label, text: "Press SPACE to begin tending your flock...", x: 20, y: 700, font: FONT, size: 60, color: color
   end
   
   def draw(target)

@@ -1,15 +1,10 @@
 class ClockView < ActorView
-  #COLOR = [250,250,255,200]
   def draw(target,x_off,y_off,z)
-    #text = "#{@actor.score.to_s} lbs."
-
-    #@font ||= @stage.resource_manager.load_font 'Emulator.ttf', 16
     @screen ||= @stage.resource_manager.load_image 'clock_bg.png'
 
     x = @actor.x
     y = @actor.y
     @screen.draw x, y, z
-    #@font.draw text, x,y,z, 1,1, target.convert_color(COLOR)
   end
 end
 
@@ -21,20 +16,20 @@ class Clock < Actor
   NIGHTFALL = 19*60*1000
 
   def setup
-    @label = spawn :label, layer: ZOrder::HudText, size: 64, font: 'SueEllenFrancisco.ttf'
+    @label = spawn :label, layer: ZOrder::HudText, size: 45, font: FONT
     text = "00:00"
     width = @label.font.text_width text
     @label.x = self.x+10
-    @label.y = self.y
+    @label.y = self.y+2
     @label.text = text
     @time = 0
     @day = 0
     @night = true
 
-    @day_label = spawn :label, layer: ZOrder::HudText, size: 25
+    @day_label = spawn :label, layer: ZOrder::HudText, size: 28, font: FONT
     @day_label.text = "Day #{@day}"
-    @day_label.x = self.x+90
-    @day_label.y = self.y+24
+    @day_label.x = self.x+10
+    @day_label.y = self.y+35
 
     add_timer 'tick', 1000 do
       truncated_time = @time / 1000.0
