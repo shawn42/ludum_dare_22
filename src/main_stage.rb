@@ -18,8 +18,7 @@ class MainStage < Stage
     @were_shepard.when :remove_me do
       # dead... you lose
       # change_stage_to :you_lose
-      puts "you died"
-      exit
+      fire :next_stage
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
@@ -40,6 +39,7 @@ class MainStage < Stage
       @sheep_herder.disable!
       sound_manager.play_sound :wolf
       @background.night!
+      spawn :popup, x: 100, y: 400, msg: "CLICK or hit SPACE to feed!"      
     end
     @were_shepard.when :require_food do |hunger|
       @hunger_meter.hunger = hunger

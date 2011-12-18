@@ -13,10 +13,10 @@ class WereShepard < Actor
     @clock.nighttime? ? become_were_shepard : become_shepard
 
     @clock.when :transition_to_day do
+      stage.remove_timer 'endswipe'
       become_shepard
     end
     @clock.when :transition_to_night do
-      puts 4
       become_were_shepard
     end
 
@@ -37,6 +37,11 @@ class WereShepard < Actor
       fire :attack, -@dir
       # eat(5)
       play_sound ATTACK_SOUNDS.sample
+      self.action = :swipe
+      stage.add_timer 'endswipe', 200 do
+        self.action = :were_shepard
+        stage.remove_timer 'endswipe'
+      end
     end
   end
 
