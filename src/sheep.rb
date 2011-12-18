@@ -33,11 +33,11 @@ class Sheep < Actor
         },
         dude: {
           normal: resource_manager.load_image('dude_sheep.png'),
-          picked_up: resource_manager.load_image('sheep_lift.png'),
+          picked_up: resource_manager.load_image('dude_sheep_lift.png'),
         },
         chick: {
           normal: resource_manager.load_image('chick_sheep.png'),
-          picked_up: resource_manager.load_image('sheep_lift.png'),
+          picked_up: resource_manager.load_image('chick_sheep_lift.png'),
         },
       }
     end
