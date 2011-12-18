@@ -8,6 +8,7 @@ class DemoStage < Stage
     @ground = spawn :ground, x: mid_screen, y: viewport.height/2
 
     @clock = spawn :clock, x: 950, y: 10
+    @hunger_meter = spawn :hunger_meter, x: 50, y: 10
     @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.3)
     @moon = spawn :moon, x: 0, y: 200, clock: @clock, offset: -1 * (Math::PI/2.0)
 
@@ -33,6 +34,14 @@ class DemoStage < Stage
       sound_manager.play_sound :wolf
       @background.night!
     end
+    @were_shepard.when :require_food do |hunger|
+      @hunger_meter.hunger = hunger
+    end
+    @were_shepard.when :ate_food do |amount|
+      @hunger_meter.subtract amount
+    end
+
+
     input_manager.reg :down, Kb0 do
       @clock.daytime!
     end

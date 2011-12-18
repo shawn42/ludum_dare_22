@@ -40,15 +40,17 @@ class WereShepard < Actor
   end
 
   def update(time)
-    move time if @were
+    if @were
+      move time 
 
-    size = (self.y / 600.0) + 0.3
-    graphical.x_scale = size
-    graphical.y_scale = size
+      size = (self.y / 600.0) + 0.3
+      graphical.x_scale = size
+      graphical.y_scale = size
 
-    @dir = -1 if move_right
-    @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.x_scale.abs
+      @dir = -1 if move_right
+      @dir = 1 if move_left
+      graphical.x_scale = @dir * graphical.x_scale.abs
+    end
   end
 
   def become_were_shepard
@@ -57,11 +59,13 @@ class WereShepard < Actor
     @hunger *= HUNGER_SCALE
     puts "need #{@hunger}"
     @consumed_food = 0
+    fire :require_food, @hunger
   end
 
   def eat(amount)
     puts "consumed #{amount}"
     @consumed_food += amount
+    fire :ate_food, amount
   end
 
   def become_shepard
