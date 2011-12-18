@@ -91,6 +91,10 @@ class WereShepard < Actor
     self.y += vertical_speed * time if move_down
     self.y -= vertical_speed * time if move_up
 
+    self.y = viewport.height - 1 if y > viewport.height
+    self.x = 1 if x < 0    
+    self.x = viewport.width - 1 if x > viewport.width
+    
     if self.y < HORIZON
       self.y = HORIZON
     end
