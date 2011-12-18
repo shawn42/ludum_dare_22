@@ -23,6 +23,8 @@ class MainStage < Stage
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
+    spawn :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
+    
     @were_shepard.when :attack do |dir|
       sheep = @sheep_herder.find_sheep(@were_shepard.x + 40*dir, @were_shepard.y)
       @were_shepard.eat sheep.injure! if sheep
