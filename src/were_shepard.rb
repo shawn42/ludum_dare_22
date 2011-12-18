@@ -57,11 +57,13 @@ class WereShepard < Actor
     @hunger *= HUNGER_SCALE
     puts "need #{@hunger}"
     @consumed_food = 0
+    fire :require_food, @hunger
   end
 
   def eat(amount)
     puts "consumed #{amount}"
     @consumed_food += amount
+    fire :ate_food, amount
   end
 
   def become_shepard
