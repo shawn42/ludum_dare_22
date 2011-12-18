@@ -5,6 +5,7 @@ class SheepHerder < Actor
   def setup
     # TODO build some sheep
     @sheepies = []
+    @clock = opts[:clock]
 
     input_manager.reg :mouse_down, MsLeft do |event|
       check_for_sheep_under_mouse event[:data]
@@ -29,8 +30,8 @@ class SheepHerder < Actor
     spawn_sheep age: 0, gender: [:dude, :chick].sample, x: bb.left, y: bb.top
   end
 
-  def spawn_sheep(*args)
-    sheep = spawn(:sheep, *args)
+  def spawn_sheep(args)
+    sheep = spawn(:sheep, args.merge(clock: @clock))
     sheep.when :did_the_hump do
       birth_baby sheep
     end

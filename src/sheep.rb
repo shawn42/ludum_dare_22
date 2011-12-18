@@ -14,17 +14,8 @@ class Sheep < Actor
   attr_accessor :gender, :age
 
   def setup
-    @health = case gender
-    when :dude
-      4
-    when :chick
-      2
-    else #baby
-      1
-    end
-
+    @clock = opts[:clock]
     if @@images.nil?
-      # TODO lift images for all types
       @@images = {
         genderless: {
           normal: resource_manager.load_image('sheep.png'),
@@ -33,11 +24,11 @@ class Sheep < Actor
         },
         dude: {
           normal: resource_manager.load_image('dude_sheep.png'),
-          picked_up: resource_manager.load_image('sheep_lift.png'),
+          picked_up: resource_manager.load_image('dude_sheep_lift.png'),
         },
         chick: {
           normal: resource_manager.load_image('chick_sheep.png'),
-          picked_up: resource_manager.load_image('sheep_lift.png'),
+          picked_up: resource_manager.load_image('chick_sheep_lift.png'),
         },
       }
     end
@@ -49,6 +40,15 @@ class Sheep < Actor
     end
 
     @gender = opts[:gender] || :dude
+    @health = case @gender
+    when :dude
+      4
+    when :chick
+      2
+    else #baby
+      1
+    end
+
     @age = opts[:age] || 0
     update_image()
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
@@ -153,15 +153,25 @@ class Sheep < Actor
     @speed = speed
   end
 
+  def random_target
+    begin
+      @target = [rand(1000), rand(800)]
+    end while not @boundary.collide_point? @target[0], @target[1]
+    @speed = rand(400) / 100.0
+  end
+
   def move(time)
     movement_vector = nil
     unless @picked_up
       if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
         # No target, acquire one
-        begin
-          @target = [rand(1000), rand(800)]
-        end while not @boundary.collide_point? @target[0], @target[1]
-        @speed = rand(400) / 100.0
+        if @clock.daytime?
+          random_target 
+        else
+          random_target
+          # run_away_from_were_shepard
+          # need to know where the wolfie is?
+        end
       end
 
       full_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y)
@@ -169,7 +179,6 @@ class Sheep < Actor
         @speed = full_vector.magnitude
       end
       movement_vector = full_vector.unit * @speed * time / 100.0
-
 
       self.x += movement_vector[0]
       self.y += movement_vector[1]
@@ -210,7 +219,7 @@ class Sheep < Actor
   CRUNCH_SOUNDS = [:crunch1, :crunch2]
   def injure!
     @health -= 1
-    # spawn :gibs, size: 5-@health
+    spawn :gibs, size: 5-@health, x: self.x, y: self.y
     play_sound CRUNCH_SOUNDS.sample
     die! if @health == 0
 

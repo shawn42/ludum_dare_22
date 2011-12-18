@@ -12,14 +12,14 @@ class DemoStage < Stage
     @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.3)
     @moon = spawn :moon, x: 0, y: 200, clock: @clock, offset: -1 * (Math::PI/2.0)
 
-    @sheep_herder = spawn :sheep_herder
     @were_shepard = spawn :were_shepard, x: 500, y: 500, clock: @clock
     @were_shepard.when :remove_me do
       # dead... you lose
     end
+    @sheep_herder = spawn :sheep_herder, clock: @clock
 
     @were_shepard.when :attack do |dir|
-      sheep = @sheep_herder.find_sheep(@were_shepard.x + 30*dir, @were_shepard.y)
+      sheep = @sheep_herder.find_sheep(@were_shepard.x + 40*dir, @were_shepard.y)
       @were_shepard.eat sheep.injure! if sheep
     end
 
