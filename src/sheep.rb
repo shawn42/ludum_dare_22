@@ -205,6 +205,13 @@ class Sheep < Actor
 
   def age!
     @age += 1
+    @health = 
+      case @gender
+      when :dude
+        4
+      when :chick
+        2
+      end
     update_image
     if (@age > 3)
       self.die!
