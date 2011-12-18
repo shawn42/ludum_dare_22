@@ -3,10 +3,13 @@ class WereShepard < Actor
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
   HUNGER_SCALE = 1.3
+  HORIZON = 240
   def setup
     @clock = opts[:clock]
     @hunger = 10
     @dir = 1
+    @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
+
     @clock.nighttime? ? become_were_shepard : become_shepard
 
     @clock.when :transition_to_day do
@@ -40,7 +43,14 @@ class WereShepard < Actor
 
   def update(time)
     move time if @were
-    graphical.scale = (self.y / 600.0) + 0.3
+
+    size = (self.y / 600.0) + 0.3
+    graphical.x_scale = size
+    graphical.y_scale = size
+
+    @dir = -1 if move_right
+    @dir = 1 if move_left
+    graphical.x_scale = @dir * graphical.scale.abs
   end
 
   def become_were_shepard
@@ -75,9 +85,9 @@ class WereShepard < Actor
     self.y += vertical_speed * time if move_down
     self.y -= vertical_speed * time if move_up
 
-    @dir = -1 if move_right
-    @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.scale.abs
+    if self.y < HORIZON
+      self.y = HORIZON
+    end
   end
 
 end

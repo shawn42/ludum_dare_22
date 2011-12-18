@@ -7,6 +7,7 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
+  HORIZON = 240
   has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
 
   @@images = nil
@@ -120,7 +121,6 @@ class Sheep < Actor
     @mating = mating
   end
 
-  HORIZON = 240
   def update(time)
     move time unless mating?
   end
@@ -143,31 +143,34 @@ class Sheep < Actor
   end
 
   def move(time)
-    return if @picked_up
-    if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
-      # No target, acquire one
-      begin
-        @target = [rand(1000), rand(800)]
-      end while not @boundary.collide_point? @target[0], @target[1]
-      @speed = rand(400) / 100.0
+    unless @picked_up
+      if @target.nil? or (@target[0] - self.x).abs < 2 or (@target[1] - self.y).abs < 2
+        # No target, acquire one
+        begin
+          @target = [rand(1000), rand(800)]
+        end while not @boundary.collide_point? @target[0], @target[1]
+        @speed = rand(400) / 100.0
+      end
+
+      full_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y)
+      if full_vector.magnitude.abs < @speed
+        @speed = full_vector.magnitude
+      end
+      movement_vector = full_vector.unit * @speed * time / 100.0
+
+
+      self.x += movement_vector[0]
+      self.y += movement_vector[1]
+      if self.y < HORIZON
+        self.y = HORIZON
+      end
+      graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs
     end
 
-    full_vector = Ftor.new(@target[0] - self.x, @target[1] - self.y)
-    if full_vector.magnitude.abs < @speed
-      @speed = full_vector.magnitude
-    end
-    movement_vector = full_vector.unit * @speed * time / 100.0
+    size = (self.y / 600.0) + 0.3
+    graphical.x_scale = size
+    graphical.y_scale = size
 
-
-    self.x += movement_vector[0]
-    self.y += movement_vector[1]
-    if self.y < HORIZON
-      self.y = HORIZON
-    end
-
-    graphical.x_scale = (self.y / 600.0) + 0.3
-    graphical.y_scale = (self.y / 600.0) + 0.3
-    graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs
   end
 
   def age!
