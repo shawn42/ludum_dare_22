@@ -56,6 +56,8 @@ class WereShepard < Actor
       @dir = -1 if move_right
       @dir = 1 if move_left
       graphical.x_scale = @dir * graphical.x_scale.abs
+      @my_shadow.set_scale(graphical.x_scale, graphical.y_scale)
+      @my_shadow.move_to(self.x, self.y)
     end
   end
 
@@ -63,6 +65,7 @@ class WereShepard < Actor
     @were = true
     self.action = :were_shepard
     fire :require_food, @hunger
+    @my_shadow = spawn :were_shepard_shadow
   end
 
   def eat(amount)
@@ -76,6 +79,10 @@ class WereShepard < Actor
     @hunger *= HUNGER_SCALE
     @were = false
     self.action = :shepard
+    if !@my_shadow.nil?
+      @my_shadow.remove_self
+      @my_shadow = nil
+    end
   end
 
   def die!

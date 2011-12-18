@@ -26,9 +26,9 @@ class SheepShadow < Shadow
   end
 end
 
-class WolfShadow < Shadow
+class WereShepardShadow < Shadow
   def setup
     super
-    @offset = [0, 50]
+    @offset = [0, 110]
   end
 end
