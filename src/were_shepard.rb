@@ -40,15 +40,17 @@ class WereShepard < Actor
   end
 
   def update(time)
-    move time if @were
+    if @were
+      move time 
 
-    size = (self.y / 600.0) + 0.3
-    graphical.x_scale = size
-    graphical.y_scale = size
+      size = (self.y / 600.0) + 0.3
+      graphical.x_scale = size
+      graphical.y_scale = size
 
-    @dir = -1 if move_right
-    @dir = 1 if move_left
-    graphical.x_scale = @dir * graphical.x_scale.abs
+      @dir = -1 if move_right
+      @dir = 1 if move_left
+      graphical.x_scale = @dir * graphical.x_scale.abs
+    end
   end
 
   def become_were_shepard

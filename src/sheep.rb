@@ -39,17 +39,20 @@ class Sheep < Actor
       end
     end
 
-    @gender = opts[:gender] || :dude
-    @health = case @gender
-    when :dude
-      4
-    when :chick
-      2
-    else #baby
-      1
-    end
-
     @age = opts[:age] || 0
+    @gender = opts[:gender] || :dude
+    @health =
+      if @age == 0
+        1
+      else
+        case @gender
+        when :dude
+          4
+        when :chick
+          2
+        end
+      end
+
     update_image()
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
   end
@@ -188,7 +191,9 @@ class Sheep < Actor
     end
 
     size = (self.y / 600.0) + 0.3
-    graphical.x_scale = size
+    # haxors
+    dir = graphical.x_scale < 0 ? -1 : 1
+    graphical.x_scale = size * dir
     graphical.y_scale = size
 
     graphical.x_scale = (movement_vector.x > 0 ? -1 : 1) * graphical.x_scale.abs if movement_vector
