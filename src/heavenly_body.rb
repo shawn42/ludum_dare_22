@@ -3,8 +3,8 @@ class HeavenlyBody < Actor
 
   def setup
     @clock = opts[:clock]
-    @center = [600, 180]
-    @radius = 70
+    @center = [600, 200]
+    @radius = 150
     @offset = opts[:offset]
     # @center = [wrapped_screen.width/2, wrapped_screen.height]
     # @radius = wrapped_screen.height

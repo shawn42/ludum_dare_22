@@ -8,7 +8,7 @@ class DemoStage < Stage
     @ground = spawn :ground, x: mid_screen, y: viewport.height/2
 
     @clock = spawn :clock, x: 950, y: 10
-    @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.0)
+    @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.3)
     @moon = spawn :moon, x: 0, y: 200, clock: @clock, offset: -1 * (Math::PI/2.0)
 
     @sheep_herder = spawn :sheep_herder
