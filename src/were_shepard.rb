@@ -10,6 +10,7 @@ class WereShepard < Actor
     @dir = 1
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
     @blink_timer = 0
+    @blink_interval = 2000
 
     @clock.nighttime? ? become_were_shepard : become_shepard
 
@@ -46,7 +47,6 @@ class WereShepard < Actor
     end
   end
 
-  BLINK_INTERVAL = 1800
   def update(time)
     if @were
       move time 
@@ -62,7 +62,9 @@ class WereShepard < Actor
       @my_shadow.move_to(self.x, self.y)
     else
       @blink_timer += time
-      if @blink_timer % BLINK_INTERVAL < 15
+      if @blink_timer > @blink_interval
+        @blink_timer = 0
+        @blink_interval = rand(50) * 100 + 500
         self.action = :blink
         stage.add_timer 'endblink', 200 do
           self.action = :shepard
@@ -77,6 +79,9 @@ class WereShepard < Actor
     self.action = :were_shepard
     fire :require_food, @hunger
     @my_shadow = spawn :were_shepard_shadow
+
+    # Just to be sure we don't get odd flickering
+    stage.remove_timer 'endblink'
   end
 
   def eat(amount)
