@@ -29,7 +29,7 @@ GAMEBOX_GFX_PATH =  GAMEBOX_PATH + "data/graphics/"
 GAMEBOX_FONTS_PATH =  GAMEBOX_PATH + "data/fonts/"
 
 # NEEDED FOR PACKAGING
-GAME_NAME = "AppetiteForDestruction"
+GAME_NAME = "LonelyShepard"
 RELEASE_VERSION = '0.1'
 
 APP = GAME_NAME
