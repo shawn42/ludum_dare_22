@@ -68,10 +68,7 @@ class MainStage < Stage
 
   def gb_draw(target)
     z = 0
-    # TODO PERF cache this array and invalidate when new layers come in?
     @parallax_layers.each do |parallax_layer|
-    # @drawables.keys.sort.reverse.each do |parallax_layer|
-
       drawables_on_parallax_layer = @drawables[parallax_layer]
 
       if drawables_on_parallax_layer
@@ -83,6 +80,7 @@ class MainStage < Stage
 
           z += 1
           # drawables_on_parallax_layer[layer].each do |drawable|
+          # this becomes a tie breaker, so all sheep and the shepard must be on the same layer
           drawables_on_parallax_layer[layer].sort_by{ |drawable|
             w = drawable.actor.respond_to?(:width) ? drawable.actor.width : 0
             drawable.actor.y + w
