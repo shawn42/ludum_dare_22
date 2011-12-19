@@ -1,4 +1,4 @@
-class WereShepard < Actor
+class WereShepherd < Actor
   has_behavior :audible, :graphical, :animated, :updatable, layered: {layer: ZOrder::PeopleInTheField}
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
@@ -12,14 +12,14 @@ class WereShepard < Actor
     @blink_timer = 0
     @blink_interval = 2000
 
-    @clock.nighttime? ? become_were_shepard : become_shepard
+    @clock.nighttime? ? become_were_shepherd : become_shepherd
 
     @clock.when :transition_to_day do
       stage.remove_timer 'endswipe'
-      become_shepard
+      become_shepherd
     end
     @clock.when :transition_to_night do
-      become_were_shepard
+      become_were_shepherd
     end
 
     i = input_manager
@@ -41,7 +41,7 @@ class WereShepard < Actor
       play_sound ATTACK_SOUNDS.sample
       self.action = :swipe
       stage.add_timer 'endswipe', 200 do
-        self.action = :were_shepard
+        self.action = :were_shepherd
         stage.remove_timer 'endswipe'
       end
     end
@@ -67,18 +67,18 @@ class WereShepard < Actor
         @blink_interval = rand(50) * 100 + 500
         self.action = :blink
         stage.add_timer 'endblink', 200 do
-          self.action = :shepard
+          self.action = :shepherd
           stage.remove_timer 'endblink'
         end
       end
     end
   end
 
-  def become_were_shepard
+  def become_were_shepherd
     @were = true
-    self.action = :were_shepard
+    self.action = :were_shepherd
     fire :require_food, @hunger
-    @my_shadow = spawn :were_shepard_shadow
+    @my_shadow = spawn :were_shepherd_shadow
 
     # Just to be sure we don't get odd flickering
     stage.remove_timer 'endblink'
@@ -89,12 +89,12 @@ class WereShepard < Actor
     fire :ate_food, amount
   end
 
-  def become_shepard(started = true)
+  def become_shepherd(started = true)
     die! if @consumed_food < @hunger && @clock.started?
     @consumed_food = 0
     @hunger *= HUNGER_SCALE
     @were = false
-    self.action = :shepard
+    self.action = :shepherd
     if !@my_shadow.nil?
       @my_shadow.remove_self
       @my_shadow = nil

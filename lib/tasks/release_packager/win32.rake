@@ -9,9 +9,10 @@ RELEASE_FOLDER_WIN32_EXE = "#{RELEASE_FOLDER_BASE}_WIN32"
 RELEASE_FOLDER_WIN32_INSTALLER = "#{RELEASE_FOLDER_BASE}_WIN32_INSTALLER"
 
 WEBSITE_FILE = "website.url"
-
 #--no-dep-run --gemfile Gemfile
-OCRA_COMMAND = "ocra bin/#{APP}.rbw --windows  --icon media/icon.ico --no-enc #{SOURCE_FOLDERS.map {|s| "#{s}/**/*.* "}.join}"
+# OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc #{SOURCE_FOLDERS.map {|s| "#{s}/**/*.* "}.join}"
+# OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
+OCRA_COMMAND = "ocra src/#{APP}.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
 
 INSTALLER_BUILD_SCRIPT = File.expand_path("installer.iss", RELEASE_FOLDER)
 
@@ -31,6 +32,7 @@ task "release:win32:installer" => ["release:win32:installer_zip"] # No point mak
 file WIN32_EXECUTABLE => "build:win32:standalone"
 desc "Ocra => #{WIN32_EXECUTABLE} v#{RELEASE_VERSION}"
 task "build:win32:standalone" => SOURCE_FOLDER_FILES do
+  mv "src/app.rb", "src/#{APP}.rb"
   system OCRA_COMMAND
 end
 
@@ -49,7 +51,7 @@ task "build:win32:installer" => SOURCE_FOLDER_FILES do
   File.open(WEBSITE_FILE, "w") do |file|
     file.puts <<END
 [InternetShortcut]
-URL=http://spooner.github.com/games/#{APP}
+URL=http://shawn42.github.com/games/#{APP}
 END
   end
 
@@ -60,10 +62,10 @@ END
 AppName=#{APP_READABLE}
 AppVersion=#{RELEASE_VERSION}
 DefaultDirName={pf}\\#{APP_READABLE.gsub(/[^\w\s]/, '')}
-DefaultGroupName=Spooner Games\\#{APP_READABLE}
+DefaultGroupName=Gamebox Games\\#{APP_READABLE}
 OutputDir=#{RELEASE_FOLDER}
 OutputBaseFilename=#{WIN32_INSTALLER_NAME}
-SetupIconFile=media/icon.ico
+SetupIconFile=data/graphics/icon.ico
 UninstallDisplayIcon={app}\\#{APP}.exe
 
 [Files]
@@ -92,7 +94,10 @@ END
 #LicenseFile=COPYING.txt
   end
 
-  system OCRA_COMMAND + " --chdir-first --no-lzma --innosetup #{INSTALLER_BUILD_SCRIPT}"
+  puts "About to run"
+  mv "src/app.rb", "src/#{APP}.rb"
+  puts system(OCRA_COMMAND + " --chdir-first --no-lzma --innosetup '#{INSTALLER_BUILD_SCRIPT}'")
+  puts "ran."
   
   rm INSTALLER_BUILD_SCRIPT
   rm WEBSITE_FILE

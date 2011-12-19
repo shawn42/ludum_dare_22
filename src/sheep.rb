@@ -161,7 +161,7 @@ class Sheep < Actor
           random_target 
         else
           random_target
-          # run_away_from_were_shepard
+          # run_away_from_were_shepherd
           # need to know where the wolfie is?
         end
       end

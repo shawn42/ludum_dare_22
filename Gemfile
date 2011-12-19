@@ -8,6 +8,7 @@ group :package do
   gem "gamebox", '0.3.4'
   gem "diy"
   gem "tween"
+  gem "ocra"
 end
 
 group :development do

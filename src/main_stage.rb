@@ -14,8 +14,8 @@ class MainStage < Stage
     @sun = spawn :sun, x: 0, y: 200, clock: @clock, offset: (Math::PI/2.3)
     @moon = spawn :moon, x: 0, y: 200, clock: @clock, offset: -1 * (Math::PI/2.0)
 
-    @were_shepard = spawn :were_shepard, x: 500, y: 500, clock: @clock
-    @were_shepard.when :remove_me do
+    @were_shepherd = spawn :were_shepherd, x: 500, y: 500, clock: @clock
+    @were_shepherd.when :remove_me do
       # dead... you lose
       # change_stage_to :you_lose
       fire :next_stage
@@ -28,9 +28,9 @@ class MainStage < Stage
       remove_timer 'breed_tip'
     end
     
-    @were_shepard.when :attack do |dir|
-      sheep = @sheep_herder.find_sheep(@were_shepard.x + 40*dir, @were_shepard.y)
-      @were_shepard.eat sheep.injure! if sheep
+    @were_shepherd.when :attack do |dir|
+      sheep = @sheep_herder.find_sheep(@were_shepherd.x + 40*dir, @were_shepherd.y)
+      @were_shepherd.eat sheep.injure! if sheep
     end
 
     @clock.daytime!
@@ -42,7 +42,7 @@ class MainStage < Stage
       sound_manager.play_sound :rooster
       @background.day!
       if ! @sheep_herder.are_sheep_left?
-        @were_shepard.die!
+        @were_shepherd.die!
       end
     end
     @clock.when :transition_to_night do
@@ -55,10 +55,10 @@ class MainStage < Stage
         remove_timer 'feed_tip'
       end      
     end
-    @were_shepard.when :require_food do |hunger|
+    @were_shepherd.when :require_food do |hunger|
       @hunger_meter.hunger = hunger
     end
-    @were_shepard.when :ate_food do |amount|
+    @were_shepherd.when :ate_food do |amount|
       @hunger_meter.subtract amount
     end
 
@@ -92,7 +92,7 @@ class MainStage < Stage
 
           z += 1
           # drawables_on_parallax_layer[layer].each do |drawable|
-          # this becomes a tie breaker, so all sheep and the shepard must be on the same layer
+          # this becomes a tie breaker, so all sheep and the shepherd must be on the same layer
           drawables_on_parallax_layer[layer].sort_by{ |drawable|
             h = drawable.actor.respond_to?(:height) ? drawable.actor.height/2 : 0
             drawable.actor.y + h

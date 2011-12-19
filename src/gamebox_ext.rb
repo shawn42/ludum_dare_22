@@ -10,3 +10,14 @@ class Label
     @font ? @font.height : 0
   end
 end
+
+class Graphical
+  def height
+    image ? image.height : 0
+  end
+end
+class Animated
+  def height
+    image ? image.height : 0
+  end
+end

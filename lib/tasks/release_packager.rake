@@ -4,6 +4,7 @@ require 'rake/clean'
 # raise "APP must be defined for release" unless defined? APP
 # raise "RELEASE_VERSION must be defined for release" unless defined? RELEASE_VERSION
 APP = GAME_NAME
+APP_READABLE = APP
 RELEASE_VERSION = `git log --pretty=format:'%h' -1` unless defined? RELEASE_VERSION
 
 RELEASE_FOLDER = 'pkg'
