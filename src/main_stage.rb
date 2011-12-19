@@ -22,8 +22,12 @@ class MainStage < Stage
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
-    spawn :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
-
+    @breed_tip = spawn :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
+    add_timer 'breed_tip', 3000 do
+      @breed_tip.remove_self
+      remove_timer 'breed_tip'
+    end
+    
     @were_shepard.when :attack do |dir|
       sheep = @sheep_herder.find_sheep(@were_shepard.x + 40*dir, @were_shepard.y)
       @were_shepard.eat sheep.injure! if sheep
@@ -39,7 +43,11 @@ class MainStage < Stage
       @sheep_herder.disable!
       sound_manager.play_sound :wolf
       @background.night!
-      spawn :popup, x: 100, y: 400, msg: "CLICK or hit SPACE to feed!"      
+      @feed_tip = spawn :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
+      add_timer 'feed_tip', 3000 do
+        @feed_tip.remove_self
+        remove_timer 'feed_tip'
+      end      
     end
     @were_shepard.when :require_food do |hunger|
       @hunger_meter.hunger = hunger

@@ -102,7 +102,6 @@ class WereShepard < Actor
   end
 
   def die!
-    # TODO this is broken
     self.remove_self
   end
 
