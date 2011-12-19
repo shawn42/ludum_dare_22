@@ -62,8 +62,41 @@ class MainStage < Stage
 
   def draw(target)
     target.fill_screen BGCOLOR, ZOrder::BackgroundColor
-    super
+    gb_draw target
     target.fill_screen NIGHT_OVERLAY_COLOR, ZOrder::NightOverlay if @clock.nighttime?
   end
+
+  def gb_draw(target)
+    z = 0
+    @parallax_layers.each do |parallax_layer|
+      drawables_on_parallax_layer = @drawables[parallax_layer]
+
+      if drawables_on_parallax_layer
+        @layer_orders[parallax_layer].each do |layer|
+        # drawables_on_parallax_layer.keys.sort.each do |layer|
+
+          trans_x = @viewport.x_offset parallax_layer
+          trans_y = @viewport.y_offset parallax_layer
+
+          z += 1
+          # drawables_on_parallax_layer[layer].each do |drawable|
+          # this becomes a tie breaker, so all sheep and the shepard must be on the same layer
+          drawables_on_parallax_layer[layer].sort_by{ |drawable|
+            w = drawable.actor.respond_to?(:width) ? drawable.actor.width : 0
+            drawable.actor.y + w
+          }.each do |drawable|
+            begin
+              drawable.draw target, trans_x, trans_y, z
+            rescue Exception => ex
+              p drawable.class
+              p ex
+              p ex.backtrace
+            end
+          end
+        end
+      end
+    end
+  end
+
 
 end

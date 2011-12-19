@@ -1,5 +1,5 @@
 class WereShepard < Actor
-  has_behavior :audible, :graphical, :animated, :updatable, layered: {layer: ZOrder::Player}
+  has_behavior :audible, :graphical, :animated, :updatable, layered: {layer: ZOrder::PeopleInTheField}
   attr_accessor :move_left, :move_right, :move_up, :move_down
 
   HUNGER_SCALE = 1.3
@@ -25,7 +25,7 @@ class WereShepard < Actor
     i.while_pressed [KbA, KbLeft], self, :move_left
     i.while_pressed [KbS, KbDown], self, :move_down
     i.while_pressed [KbD, KbRight], self, :move_right
-    i.reg :down, KbSpace, MsLeft, do
+    i.reg :down, KbSpace, MsLeft do
       attack
     end
   end
