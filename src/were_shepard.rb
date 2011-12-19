@@ -9,6 +9,7 @@ class WereShepard < Actor
     @consumed_food = 0
     @dir = 1
     @boundary = Rect.new(0, HORIZON, viewport.width, viewport.height - HORIZON)
+    @blink_timer = 0
 
     @clock.nighttime? ? become_were_shepard : become_shepard
 
@@ -45,6 +46,7 @@ class WereShepard < Actor
     end
   end
 
+  BLINK_INTERVAL = 1800
   def update(time)
     if @were
       move time 
@@ -58,6 +60,15 @@ class WereShepard < Actor
       graphical.x_scale = @dir * graphical.x_scale.abs
       @my_shadow.set_scale(graphical.x_scale, graphical.y_scale)
       @my_shadow.move_to(self.x, self.y)
+    else
+      @blink_timer += time
+      if @blink_timer % BLINK_INTERVAL < 15
+        self.action = :blink
+        stage.add_timer 'endblink', 200 do
+          self.action = :shepard
+          stage.remove_timer 'endblink'
+        end
+      end
     end
   end
 
