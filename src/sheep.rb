@@ -43,7 +43,7 @@ class Sheep < Actor
   def bb
     xs = self.x_scale.abs
     ys = self.y_scale.abs
-    Rect.new(self.x - 40*xs, self.y - 30*ys, width*xs, height*ys)
+    Rect.new(self.x - 40*xs, self.y - 30*ys, width*xs*1.5, height*ys)
   end
 
   def collide_point?(x,y)
