@@ -94,8 +94,8 @@ class MainStage < Stage
           # drawables_on_parallax_layer[layer].each do |drawable|
           # this becomes a tie breaker, so all sheep and the shepard must be on the same layer
           drawables_on_parallax_layer[layer].sort_by{ |drawable|
-            w = drawable.actor.respond_to?(:width) ? drawable.actor.width : 0
-            drawable.actor.y + w
+            h = drawable.actor.respond_to?(:height) ? drawable.actor.height/2.0 : 0
+            drawable.actor.y + h
           }.each do |drawable|
             begin
               drawable.draw target, trans_x, trans_y, z
