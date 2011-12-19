@@ -13,27 +13,6 @@ class Sheep < Actor
 
   def setup
     @clock = opts[:clock]
-    if @@images.nil?
-      @@images = {
-        baby: {
-          normal: resource_manager.load_image('baby_sheep.png'),
-          picked_up: resource_manager.load_image('baby_sheep_lift.png'),
-        },
-        dude: {
-          normal: resource_manager.load_image('dude_sheep.png'),
-          picked_up: resource_manager.load_image('dude_sheep_lift.png'),
-          dead: resource_manager.load_image('sheep_splat.png')
-        },
-        chick: {
-          normal: resource_manager.load_image('chick_sheep.png'),
-          picked_up: resource_manager.load_image('chick_sheep_lift.png'),
-        },
-        old: {
-          normal: resource_manager.load_image('old_sheep.png'),
-          picked_up: resource_manager.load_image('old_sheep_lift.png'),
-        }
-      }
-    end
 
     if rand(12) == 0
       add_timer 'bah', 1800 + rand(4000) do
