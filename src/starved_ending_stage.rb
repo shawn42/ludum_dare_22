@@ -7,6 +7,7 @@ class StarvedEndingStage < Stage
     @ground = spawn :ground, x: mid_screen, y: viewport.height/2
     @continue = false
     @input_manager.reg :keyboard_down, KbSpace do
+      sleep 2
       @continue = true
     end
     color = [0,0,0,200]

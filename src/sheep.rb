@@ -36,8 +36,8 @@ class Sheep < Actor
       }
     end
 
-    if rand(3) == 0
-      add_timer 'bah', 1000 + rand(3000) do
+    if rand(12) == 0
+      add_timer 'bah', 1800 + rand(4000) do
         play_sound :bah, speed: 1+rand-0.2
       end
     end
