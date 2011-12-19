@@ -7,35 +7,12 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
+  has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}, animated: {frame_update_time: 200}
 
-  @@images = nil
   attr_accessor :gender, :age
 
   def setup
     @clock = opts[:clock]
-    if @@images.nil?
-      @@images = {
-        baby: {
-          normal: resource_manager.load_image('baby_sheep.png'),
-          picked_up: resource_manager.load_image('baby_sheep_lift.png'),
-        },
-        dude: {
-          normal: resource_manager.load_image('dude_sheep.png'),
-          picked_up: resource_manager.load_image('dude_sheep_lift.png'),
-          dead: resource_manager.load_image('sheep_splat.png')
-        },
-        chick: {
-          normal: resource_manager.load_image('chick_sheep.png'),
-          picked_up: resource_manager.load_image('chick_sheep_lift.png'),
-        },
-        old: {
-          normal: resource_manager.load_image('old_sheep.png'),
-          picked_up: resource_manager.load_image('old_sheep_lift.png'),
-        }
-      }
-    end
-
     if rand(3) == 0
       add_timer 'bah', 1000 + rand(3000) do
         play_sound :bah, speed: 1+rand-0.2
@@ -75,14 +52,14 @@ class Sheep < Actor
   PICK_UP_ALTITUDE = 30
   def pickup!
     @picked_up = true
-    graphical.image = @picked_up_image
+    self.action = @picked_up_action
     @my_shadow.altitude = PICK_UP_ALTITUDE
     self.y -= PICK_UP_ALTITUDE
   end
 
   def release!
     @picked_up = false
-    graphical.image = @idle_image
+    self.action = @idle_action
     @my_shadow.altitude = 0
     self.y += PICK_UP_ALTITUDE
   end
@@ -146,6 +123,7 @@ class Sheep < Actor
   end
 
   def update(time)
+    super
     move time unless mating? || dead?
   end
 
@@ -210,6 +188,7 @@ class Sheep < Actor
 
     @my_shadow.set_scale graphical.x_scale, graphical.y_scale
     @my_shadow.move_to self.x, self.y
+    self.animated.frame_update_time = 400 / @speed
   end
 
   def age!
@@ -229,7 +208,7 @@ class Sheep < Actor
 
   def die!
     @my_shadow.remove_self
-    graphical.image = @@images[:dude][:dead]
+    self.action = :dead
     play_sound :sheep_death, volume: 0.25
     add_timer 'dying', 1000 do
       self.remove_self
@@ -260,19 +239,23 @@ class Sheep < Actor
 
   def update_image
     if @age == 0
-      @idle_image = @@images[:baby][:normal]
-      @picked_up_image = @@images[:baby][:picked_up]
+      @idle_action = :baby
+      @picked_up_action = :baby_picked_up
       graphical.scale = 0.6 
     elsif @age == 1 or @age == 2
-      @idle_image = @@images[gender][:normal]
-      @picked_up_image = @@images[gender][:picked_up]
+      if @gender == :dude
+        @idle_action = :dude
+        @picked_up_action = :dude_picked_up
+      else
+        @idle_action = :chick
+        @picked_up_action = :chick_picked_up
+      end
       graphical.scale = 1.0 
     else # too old to breed
-      @idle_image = @@images[:old][:normal]
-      @picked_up_image = @@images[:old][:picked_up]
+      @idle_action = :old
+      @picked_up_action = :old_picked_up
       graphical.scale = 0.9
     end
-    graphical.image = @idle_image
+    self.action = @idle_action
   end
 end
-
