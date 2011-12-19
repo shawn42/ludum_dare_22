@@ -22,8 +22,6 @@ class Gibs < Actor
     @size.times do
       @gibs << {x: 3, y: 5, size: 2, rot: Math::PI, dx: rand(4), dy: rand(5)-5, ttl: rand(1000)}
     end
-    # add_timer 'ttl', 1000 do
-    # end
   end
 
   def update(time)

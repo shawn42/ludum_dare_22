@@ -10,7 +10,7 @@ class SheepHerder < Actor
     input_manager.reg :mouse_down, MsLeft do |event|
       check_for_sheep_under_mouse event[:data]
     end
-    input_manager.reg :mouse_up, MsLeft do |event|
+    input_manager.reg :mouse_drag, MsLeft do |event|
       release_sheep event[:data]
     end
     input_manager.reg :mouse_motion do |event|
@@ -63,9 +63,18 @@ class SheepHerder < Actor
     return unless can_handle_sheep?
     if @sheep_under_mouse
 
-      target_sheep = find_mate_for @sheep_under_mouse, *event_data
+      to = Ftor.new *event_data[:to]
+      from = Ftor.new *event_data[:from]
+
       @sheep_under_mouse.release!
+
+      target = Ftor.new(@sheep_under_mouse.x,@sheep_under_mouse.y) + (to - from)
+
+      @sheep_under_mouse.move_to *target, target.magnitude
+
+      target_sheep = find_mate_for @sheep_under_mouse, *to
       @sheep_under_mouse.mate(target_sheep) if target_sheep
+
       @sheep_under_mouse = nil
       @click_x_offset = nil
       @click_y_offset = nil
