@@ -7,7 +7,7 @@ class StarvedEndingStage < Stage
     @ground = spawn :ground, x: mid_screen, y: viewport.height/2
     @continue = false
     @input_manager.reg :keyboard_down, KbSpace do
-      sleep 2
+      sleep 1
       @continue = true
     end
     color = [0,0,0,200]
@@ -16,7 +16,7 @@ class StarvedEndingStage < Stage
   
   def update(time)
     super
-    exit if @continue
+    fire :change_stage, :intro if @continue
   end
  
   def curtain_down
