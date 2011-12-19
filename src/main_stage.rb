@@ -33,11 +33,17 @@ class MainStage < Stage
       @were_shepard.eat sheep.injure! if sheep
     end
 
+    @clock.daytime!
+    @sheep_herder.spawn_initial_sheep
+
     @clock.when :transition_to_day do
       @sheep_herder.enable!
       @sheep_herder.age_sheep
       sound_manager.play_sound :rooster
       @background.day!
+      if ! @sheep_herder.are_sheep_left?
+        @were_shepard.die!
+      end
     end
     @clock.when :transition_to_night do
       @sheep_herder.disable!
@@ -64,8 +70,6 @@ class MainStage < Stage
       @clock.nighttime!
     end
 
-    @clock.daytime!
-    @sheep_herder.spawn_initial_sheep
   end
 
   def draw(target)

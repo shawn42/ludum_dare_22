@@ -105,4 +105,8 @@ class SheepHerder < Actor
     @sheepies.each { |sheep| sheep.age! }
     @sheepies.delete_if { |sheep| sheep.dead? }
   end
+
+  def are_sheep_left?
+    @sheepies.size > 0
+  end
 end
