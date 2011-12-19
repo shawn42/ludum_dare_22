@@ -25,7 +25,7 @@ class WereShepard < Actor
     i.while_pressed [KbA, KbLeft], self, :move_left
     i.while_pressed [KbS, KbDown], self, :move_down
     i.while_pressed [KbD, KbRight], self, :move_right
-    i.reg :down, KbSpace, MsLeft, do
+    i.reg :down, KbSpace, MsLeft do
       attack
     end
   end
