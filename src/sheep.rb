@@ -7,7 +7,7 @@ class SheepView < GraphicalActorView
 end
 
 class Sheep < Actor
-  has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::Sheep}
+  has_behavior :updatable, :audible, :graphical, :timed, :audible, layered: {layer: ZOrder::PeopleInTheField}
 
   @@images = nil
   attr_accessor :gender, :age
