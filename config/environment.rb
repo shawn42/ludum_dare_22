@@ -7,11 +7,13 @@ MUSIC_PATH =  APP_ROOT + "data/music/"
 GFX_PATH =  APP_ROOT + "data/graphics/"
 FONTS_PATH =  APP_ROOT + "data/fonts/"
 
-begin
-  require 'bundler'
-  Bundler.setup
-rescue LoadError
-  # Gross, for packaging
+unless ENV['OCRA_EXECUTABLE']
+  begin
+    require 'bundler'
+    Bundler.setup
+  rescue LoadError
+    # Gross, for packaging
+  end
 end
 
 require 'gamebox'

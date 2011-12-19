@@ -4,4 +4,5 @@ be rake release:osx
 # need an icon?
 
 WINDOWS:
-investigate win32.rake
+bundle exec rake build:win32:standalone
+rename app.exe to LonelyShepherd.exe

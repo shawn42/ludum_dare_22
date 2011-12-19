@@ -11,8 +11,9 @@ RELEASE_FOLDER_WIN32_INSTALLER = "#{RELEASE_FOLDER_BASE}_WIN32_INSTALLER"
 WEBSITE_FILE = "website.url"
 #--no-dep-run --gemfile Gemfile
 # OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc #{SOURCE_FOLDERS.map {|s| "#{s}/**/*.* "}.join}"
-# OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
-OCRA_COMMAND = "ocra src/#{APP}.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
+OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
+# OCRA_COMMAND = "ocra src/app.rb --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
+puts OCRA_COMMAND
 
 INSTALLER_BUILD_SCRIPT = File.expand_path("installer.iss", RELEASE_FOLDER)
 
@@ -32,7 +33,6 @@ task "release:win32:installer" => ["release:win32:installer_zip"] # No point mak
 file WIN32_EXECUTABLE => "build:win32:standalone"
 desc "Ocra => #{WIN32_EXECUTABLE} v#{RELEASE_VERSION}"
 task "build:win32:standalone" => SOURCE_FOLDER_FILES do
-  mv "src/app.rb", "src/#{APP}.rb"
   system OCRA_COMMAND
 end
 
@@ -95,7 +95,6 @@ END
   end
 
   puts "About to run"
-  mv "src/app.rb", "src/#{APP}.rb"
   puts system(OCRA_COMMAND + " --chdir-first --no-lzma --innosetup '#{INSTALLER_BUILD_SCRIPT}'")
   puts "ran."
   
