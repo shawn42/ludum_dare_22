@@ -13,7 +13,7 @@ WEBSITE_FILE = "website.url"
 # OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc #{SOURCE_FOLDERS.map {|s| "#{s}/**/*.* "}.join}"
 OCRA_COMMAND = "ocra src/app.rb --windows  --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
 # OCRA_COMMAND = "ocra src/app.rb --icon data/graphics/icon.ico --no-enc data/**/*.* src/*.* config/*.* "
-puts OCRA_COMMAND
+# puts OCRA_COMMAND
 
 INSTALLER_BUILD_SCRIPT = File.expand_path("installer.iss", RELEASE_FOLDER)
 

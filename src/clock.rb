@@ -33,7 +33,13 @@ class Clock < Actor
 
     add_timer 'tick', 1000 do
       truncated_time = @time / 1000.0
-      @label.text = "#{'%02d' % (truncated_time/60)}:#{'%02d' % ((truncated_time%60).round.to_i)}"
+      hour = '%02d' % (truncated_time/60)
+
+      minute = ((truncated_time%60).round.to_i)
+      minute = minute < 30 ? 0 : 30
+      minute = '%02d' % minute
+
+      @label.text = "#{hour}:#{minute}"
 
       if truncated_time < 30
         @day_label.text = "Day #{@day}"
