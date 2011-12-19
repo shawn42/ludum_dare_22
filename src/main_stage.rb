@@ -49,11 +49,19 @@ class MainStage < Stage
       @sheep_herder.disable!
       sound_manager.play_sound :wolf
       @background.night!
-      @feed_tip = spawn :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
-      add_timer 'feed_tip', 3000 do
-        @feed_tip.remove_self
-        remove_timer 'feed_tip'
-      end      
+      unless @feed_tip_shown        
+        @feed_tip1 = spawn :popup, x: 50, y: 300, msg: "Use WASD or Arrows to move."
+        add_timer 'remove_feed_tip', 4000 do
+          @feed_tip1.remove_self
+          @feed_tip2.remove_self if @feed_tip2
+          remove_timer 'remove_feed_tip'
+        end
+        add_timer 'second_feed_tip', 1000 do
+          @feed_tip2 = spawn :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
+          remove_timer 'second_feed_tip'
+        end
+        @feed_tip_shown = true
+      end
     end
     @were_shepherd.when :require_food do |hunger|
       @hunger_meter.hunger = hunger
