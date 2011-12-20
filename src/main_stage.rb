@@ -22,12 +22,8 @@ class MainStage < Stage
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
-    @breed_tip = spawn :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
-    add_timer 'breed_tip', 3000 do
-      @breed_tip.remove_self
-      remove_timer 'breed_tip'
-    end
-    
+    pause_with_actor :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
+
     @were_shepherd.when :attack do |dir|
       sheep = @sheep_herder.find_sheep(@were_shepherd.x + 40*dir, @were_shepherd.y)
       @were_shepherd.eat sheep.injure! if sheep
@@ -49,18 +45,10 @@ class MainStage < Stage
       @sheep_herder.disable!
       sound_manager.play_sound :wolf
       @background.night!
-      unless @feed_tip_shown        
-        @feed_tip1 = spawn :popup, x: 50, y: 300, msg: "Use WASD or Arrows to move."
-        add_timer 'remove_feed_tip', 4000 do
-          @feed_tip1.remove_self
-          @feed_tip2.remove_self if @feed_tip2
-          remove_timer 'remove_feed_tip'
+      unless @feed_tip_shown
+        pause_with_actor :popup, x: 50, y: 300, msg: "Use WASD or Arrows to move." do
+          pause_with_actor :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
         end
-        add_timer 'second_feed_tip', 1000 do
-          @feed_tip2 = spawn :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
-          remove_timer 'second_feed_tip'
-        end
-        @feed_tip_shown = true
       end
     end
     @were_shepherd.when :require_food do |hunger|
@@ -118,5 +106,24 @@ class MainStage < Stage
     end
   end
 
+  def pause_with_actor(*args)
+    timer_name = "#{args.first}_#{Time.now}"
+    add_timer timer_name, 500 do
+      remove_timer timer_name
+      on_pause do
+        pause_actor = spawn *args
+        input_manager.reg :down, KbSpace do
+          pause_actor.remove_self
+        end
+
+        pause_actor.when :remove_me do
+          @pause_listeners = nil
+          unpause
+          yield if block_given?
+        end
+      end
+      pause
+    end
+  end
 
 end
