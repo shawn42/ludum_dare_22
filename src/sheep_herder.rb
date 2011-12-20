@@ -89,8 +89,13 @@ class SheepHerder < Actor
     @click_y_offset = nil
   end
 
-  def find_sheep(x,y)
-    @sheepies.detect { |sheep| !sheep.dead? && !sheep.mating? && sheep.collide_point?(x, y) }
+  def find_sheep(x,y, x_off, y_off)
+    @sheepies.detect { |sheep| !sheep.dead? && !sheep.mating? && (
+      sheep.collide_point?(x-x_off, y-y_off) ||
+      sheep.collide_point?(x-x_off, y+y_off) ||
+      sheep.collide_point?(x+x_off, y-y_off) ||
+      sheep.collide_point?(x+x_off, y+y_off)
+    )}
   end
 
   def find_mate_for(sheep, x, y)

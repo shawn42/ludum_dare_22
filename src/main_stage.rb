@@ -25,7 +25,7 @@ class MainStage < Stage
     pause_with_actor :popup, x: 100, y: 400, msg: "Drag sheep together to breed!"
 
     @were_shepherd.when :attack do |dir|
-      sheep = @sheep_herder.find_sheep(@were_shepherd.x + 40*dir, @were_shepherd.y)
+      sheep = @sheep_herder.find_sheep(@were_shepherd.x + 40*dir, @were_shepherd.y, 10, 10)
       @were_shepherd.eat sheep.injure! if sheep
     end
 
