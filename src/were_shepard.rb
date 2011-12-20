@@ -107,7 +107,7 @@ class WereShepherd < Actor
 
   def move(time)
     horizontal_speed = 0.2
-    vertical_speed = 0.1
+    vertical_speed = 0.13
     self.x += horizontal_speed * time if move_right
     self.x -= horizontal_speed * time if move_left
     self.y += vertical_speed * time if move_down
@@ -116,7 +116,7 @@ class WereShepherd < Actor
     self.y = viewport.height - 1 if y > viewport.height
     self.x = 1 if x < 0    
     self.x = viewport.width - 1 if x > viewport.width
-    
+
     if self.y < HORIZON
       self.y = HORIZON
     end
