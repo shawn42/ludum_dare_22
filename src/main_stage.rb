@@ -37,8 +37,10 @@ class MainStage < Stage
       @sheep_herder.age_sheep
       sound_manager.play_sound :rooster
       @background.day!
-      if ! @sheep_herder.are_sheep_left?
-        @were_shepherd.die!
+      unless @sheep_herder.are_sheep_left?
+        pause_with_actor :popup, x: 300, y: 300, msg: "You're flock can no longer mate!" do
+          @were_shepherd.die!
+        end
       end
     end
     @clock.when :transition_to_night do

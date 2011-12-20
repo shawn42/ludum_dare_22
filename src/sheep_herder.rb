@@ -116,6 +116,23 @@ class SheepHerder < Actor
   end
 
   def are_sheep_left?
-    @sheepies.size > 0
+    @sheepies.size > 1 && mating_possible?
   end
+
+  def mating_possible?
+    has_baby? || (has_chick? && has_dude?)
+  end
+
+  def has_baby?
+    @sheepies.any?{|s|s.age == 0}
+  end
+
+  def has_dude?
+    @sheepies.any?{|s|s.age > 0 && s.gender == :dude}
+  end
+
+  def has_chick?
+    @sheepies.any?{|s|s.age > 0 && s.gender == :chick}
+  end
+
 end
