@@ -121,11 +121,12 @@ class SheepHerder < Actor
   end
 
   def are_sheep_left?
-    @sheepies.size > 1 && mating_possible?
+    @sheepies.size > 0 #&& mating_possible?
   end
 
   def mating_possible?
-    has_baby? || (has_chick? && has_dude?)
+    # @sheepies.size > 1 && has_baby? || (has_chick? && has_dude?)
+    true # gameplay was a little weird with this in
   end
 
   def has_baby?
