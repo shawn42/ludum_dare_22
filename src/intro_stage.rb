@@ -9,7 +9,7 @@ class IntroStage < Stage
     @input_manager.reg :keyboard_down, KbSpace do
       @continue = true
     end
-    color = Color::BLACK
+    color = [0,0,0,200]
     scale = 1.4
     spawn :label, text: "You are the last of the Wereshepherds.", x: 20, y: 300, font: FONT, size: 45, color: color,layer: ZOrder::HudText
     spawn :icon, image: 'were_shepherd/shepherd/0', x: 880, y: 50, layer: ZOrder::HudBackground, x_scale: scale, y_scale: scale

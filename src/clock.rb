@@ -15,6 +15,8 @@ class Clock < Actor
   MORNING = 7*60*1000
   NIGHTFALL = 19*60*1000
 
+  attr_reader :day
+
   def setup
     @label = spawn :label, layer: ZOrder::HudText, size: 45, font: FONT
     text = "00:00"

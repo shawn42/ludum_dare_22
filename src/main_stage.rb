@@ -18,7 +18,7 @@ class MainStage < Stage
     @were_shepherd.when :remove_me do
       # dead... you lose
       # change_stage_to :you_lose
-      fire :next_stage
+      fire :next_stage, days: @clock.day
     end
     @sheep_herder = spawn :sheep_herder, clock: @clock
 
@@ -47,6 +47,7 @@ class MainStage < Stage
       @background.night!
       unless @feed_tip_shown
         pause_with_actor :popup, x: 50, y: 300, msg: "Use WASD or Arrows to move." do
+          @feed_tip_shown = true
           pause_with_actor :popup, x: 150, y: 500, msg: "CLICK or hit SPACE to feed!"
         end
       end

@@ -10,8 +10,6 @@ class StarvedEndingStage < Stage
       sleep 1
       @continue = true
     end
-    color = [0,0,0,200]
-    spawn :label, text: "You are hungry, but you cannot eat. You die alone.", x: 20, y: 410, font: FONT, size: 48, color: color, layer: ZOrder::HudText
   end
   
   def update(time)
@@ -19,6 +17,14 @@ class StarvedEndingStage < Stage
     fire :change_stage, :intro if @continue
   end
  
+  def curtain_raising(opts)
+    @days = opts[:days]
+    color = [0,0,0,200]
+    spawn :label, text: "You are hungry, but you cannot eat. You die alone.", x: 20, y: 310, font: FONT, size: 48, color: color, layer: ZOrder::HudText
+    suffix = "s" unless @days == 1
+    spawn :label, text: "You survived #{@days} day#{suffix}!", x: 220, y: 510, font: FONT, size: 80, color: color, layer: ZOrder::HudText
+  end
+
   def curtain_down
     fire :remove_me
   end
